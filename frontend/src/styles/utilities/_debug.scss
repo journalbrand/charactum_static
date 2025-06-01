@@ -1,0 +1,37 @@
+/**
+ * @file _debug.scss
+ * @description Debug utility classes for visualizing layout areas.
+ * @dependencies base/_variables.scss
+ * @tested_by None
+ */
+@use '../base/variables' as *;
+
+/* Add debug labels to grid cells */
+.header-area::before,
+.create-pane::before,
+.graph-area::before,
+.edit-pane::before {
+  content: attr(data-area);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: var(--z-overlay);
+  border-radius: 0 0 4px 0;
+  font-family: monospace;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Ensure grid areas have relative positioning for debug labels */
+.header-area,
+.create-pane,
+.graph-area,
+.edit-pane {
+  position: relative;
+  /* overflow: visible !important; */ /* This was preventing area-specific overflow (auto/hidden) */
+} 

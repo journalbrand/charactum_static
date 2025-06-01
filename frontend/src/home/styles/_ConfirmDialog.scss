@@ -1,0 +1,36 @@
+/**
+ * @file _ConfirmDialog.scss
+ * @description Styles for the ConfirmDialog component.
+ * @dependencies None
+ * @tested_by None
+ */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirmation-dialog {
+  padding: var(--spacing-lg);
+  min-width: 300px;
+  max-width: 500px;
+
+  p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+} 

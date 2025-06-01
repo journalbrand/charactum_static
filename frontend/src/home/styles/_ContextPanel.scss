@@ -1,0 +1,24 @@
+/**
+ * @file _ContextPanel.scss
+ * @description Styles for the ContextPanel (details area).
+ * @dependencies base/_variables.scss
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.details-container {
+  grid-area: details;
+  min-width: var(--details-width);
+  width: var(--details-width);
+  max-width: var(--details-width);
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+  position: relative;
+  border: 1px solid var(--border-color);
+} 

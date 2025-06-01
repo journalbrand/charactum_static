@@ -1,0 +1,27 @@
+/**
+ * @file _NodeTypeDetailsPanel.scss
+ * @description Styles for the NodeTypeDetailsPanel component.
+ * @dependencies ../../styles/base/_variables.scss
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.node-type-details {
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.node-type-details h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.node-type-details button {
+  align-self: flex-end;
+}
+
+// Add other component-specific styles here 

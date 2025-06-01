@@ -1,0 +1,1140 @@
+{
+  "nodes": {
+    "universe":          { "label": "Universe",          "properties": ["id", "name", "description"] },
+    "story_part":        { "label": "StoryPart",        "properties": ["id", "name", "description"] },
+    "plot":              { "label": "Plot",              "properties": ["id", "name", "description"] },
+    "conflict":          { "label": "Conflict",          "properties": ["id", "name", "description"] },
+    "character":         { "label": "Character",         "properties": ["id", "name", "description"] },
+    "choice":            { "label": "Choice",            "properties": ["id", "name", "description"] },
+    "character_arc":     { "label": "CharacterArc",     "properties": ["id", "name", "description"] },
+    "character_relationship": { "label": "CharacterRelationship", "properties": ["id", "name", "description"] },
+    "place":             { "label": "Place",             "properties": ["id", "name", "description"] },
+    "prop_type":         { "label": "PropType",         "properties": ["id", "name", "description"] },
+    "prop":              { "label": "Prop",              "properties": ["id", "name", "description"] },
+    "trait":             { "label": "Trait",             "properties": ["id", "name", "description"] },
+    "state":             { "label": "State",             "properties": ["id", "name", "description"] },
+    "group":             { "label": "Group",             "properties": ["id", "name", "description"] },
+    "theme":             { "label": "Theme",             "properties": ["id", "name", "description"] },
+    "event":             { "label": "Event",             "properties": ["id", "name", "description"] },
+    "archetype":         { "label": "Archetype",         "properties": ["id", "name", "description"] }
+  },
+
+  "relationships": [
+    {
+      "name": "Universe_HAS_StoryPart",
+      "from": ["universe"],
+      "to": ["story_part"],
+      "required": false,
+      "description": "A Universe contains high-level narrative components such as series, films, seasons, episodes, chapters, games, or podcasts.",
+      "prompt_if_source": "What are the narrative components (series, films, episodes, chapters, etc.) that are part of the universe '{node_name}' ({node_description})?",
+      "prompt_if_target": "To which universe does the narrative component '{node_name}' ({node_description}) belong?"
+    },
+    {
+      "name": "Prop_INSTANCE_OF_PropType",
+      "from": ["prop"],
+      "to": ["prop_type"],
+      "required": true,
+      "description": "Explicitly connects a specific Prop instance (particular) to its general PropType (universal), denoting its ontological category.",
+      "prompt_if_source": "Which universal PropType does the specific prop '{node_name}' ({node_description}) belong to?",
+      "prompt_if_target": "List the specific props (instances) belonging to the PropType '{node_name}' ({node_description})."
+    },
+    {
+      "name": "PropType_GENERALIZES_PropType",
+      "from": ["prop_type"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly indicates that one universal PropType is a broader category that encompasses, generalizes, or includes another more specific universal PropType, forming an ontological hierarchy (e.g., 'Starship' generalizes 'X-Wing Fighter').",
+      "prompt_if_source": "Which more specific PropTypes are generalized or encompassed by the broader universal PropType '{node_name}' ({node_description})?",
+      "prompt_if_target": "What broader universal PropType generalizes or encompasses '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Prop_HAS_Component",
+      "from": ["prop"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly identifies a concrete assembly relationship, where a specific Prop instance physically incorporates or is directly assembled from another specific Prop instance (e.g., a spaceship having a particular hyperdrive installed).",
+      "prompt_if_source": "Which specific prop instances physically comprise, are contained within, or serve as concrete components of '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which specific prop instances directly include or physically incorporate '{node_name}' ({node_description}) as a concrete component?"
+    },
+    {
+      "name": "Prop_RELATED_Prop",
+      "from": ["prop"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly connects specific prop instances (individual objects or artifacts) that have meaningful narrative, symbolic, or historical connections (such as one prop instance directly succeeding, complementing, or being thematically linked to another).",
+      "prompt_if_source": "Which other specific prop instances have meaningful narrative, symbolic, or historical connections to '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which specific prop instances identify '{node_name}' ({node_description}) as having meaningful narrative, symbolic, or historical connections?"
+    },
+    {
+      "name": "StoryPart_HAS_StoryPart",
+      "from": ["story_part"],
+      "to": ["story_part"],
+      "required": false,
+      "description": "A parent StoryPart (e.g., series or season) contains subordinate StoryParts (e.g., season, episode, chapter).",
+      "prompt_if_source": "What sub-parts (seasons, episodes, chapters, issues, DLC, etc.) does '{node_name}' ({node_description}) contain?",
+      "prompt_if_target": "Which larger narrative component is '{node_name}' ({node_description}) part of?"
+    },
+    {
+      "name": "StoryPart_NEXT_PART",
+      "from": ["story_part"],
+      "to": ["story_part"],
+      "required": false,
+      "description": "Points to the immediately following StoryPart within the same parent container (e.g., Episode 2 follows Episode 1).",
+      "prompt_if_source": "What is the next sequential narrative part that follows '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which narrative part directly precedes '{node_name}' ({node_description}) in release or story order?"
+    },
+    {
+      "name": "Universe_HAS_Character",
+      "from": ["universe"],
+      "to": ["character"],
+      "required": false,
+      "description": "Universe hosts canonical characters.",
+      "prompt_if_source": "Which characters live inside {node_name} ({node_description})?",
+      "prompt_if_target": "To which universe does character {node_name} ({node_description}) canonically belong?"
+    },
+    {
+      "name": "CharacterRelationship_HAS_Character",
+      "from": ["character_relationship"],
+      "to": ["character"],
+      "required": false,
+      "description": "Connects a CharacterRelationship hub node to every Character that participates in that specific bond (siblings, romance, rivalry, mentorship, etc.).",
+      "prompt_if_source": "Which characters are involved in the relationship '{node_name}' ({node_description})?",
+      "prompt_if_target": "List the relationships (e.g., sibling, rival, mentor) that involve character '{node_name}' ({node_description})."
+    },
+    {
+      "name": "CharacterArc_OF_Character",
+      "from": ["character_arc"],
+      "to": ["character"],
+      "required": true,
+      "description": "Explicitly links a CharacterArc to the specific Character whose personal transformation, growth, or development it narratively tracks—defining precisely whose inner journey the arc represents.",
+      "prompt_if_source": "Whose deeply personal transformation, growth, or character development is clearly defined by this arc '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which CharacterArcs explicitly narrate or represent significant transformations, growth, or development experienced by the character '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterArc_INCLUDES_Choice",
+      "from": ["character_arc"],
+      "to": ["choice"],
+      "required": false,
+      "description": "Explicitly connects a CharacterArc to pivotal Choices made by the associated character, clearly identifying critical narrative moments that mark significant growth, shifts, turning points, or transformations within the character's journey.",
+      "prompt_if_source": "List pivotal choices explicitly marking significant turning points, transformations, or milestones within the character arc '{node_name}' ({node_description}).",
+      "prompt_if_target": "Which character arcs explicitly highlight or are defined by the pivotal choice '{node_name}' ({node_description}) as a significant turning point or transformative moment?"
+    },
+    {
+      "name": "CharacterArc_EXPLORES_Theme",
+      "from": ["character_arc"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly connects a CharacterArc to central narrative Themes it meaningfully explores, embodies, or symbolizes through the character's personal transformation, clearly establishing philosophical depth and thematic resonance of the arc.",
+      "prompt_if_source": "Which central themes or motifs are vividly explored, symbolized, or embodied through the character arc '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character arcs explicitly explore, symbolize, or embody the narrative theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterArc_INCLUDES_Event",
+      "from": ["character_arc"],
+      "to": ["event"],
+      "required": false,
+      "description": "Explicitly connects a CharacterArc to narrative Events that vividly dramatize, illustrate, or significantly advance the character's internal growth, transformation, or thematic journey, grounding abstract personal evolution in concrete narrative moments.",
+      "prompt_if_source": "List key narrative events vividly dramatizing, illustrating, or significantly advancing the internal growth or transformation within the character arc '{node_name}' ({node_description}).",
+      "prompt_if_target": "Which character arcs are vividly dramatized, illustrated, or significantly advanced by the narrative event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterArc_ALIGNS_WITH_Plot",
+      "from": ["character_arc"],
+      "to": ["plot"],
+      "required": false,
+      "description": "Explicitly links a CharacterArc to the broader Plot arc that primarily carries, frames, or parallels the character's personal transformation, clarifying how the individual journey threads into the larger narrative structure.",
+      "prompt_if_source": "Which broader plot arc primarily carries, frames, or parallels the personal transformation described by the character arc '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character arcs are primarily carried, framed, or paralleled by the plot arc '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterArc_DRIVEN_BY_Conflict",
+      "from": ["character_arc"],
+      "to": ["conflict"],
+      "required": false,
+      "description": "Explicitly connects a CharacterArc to primary narrative Conflicts that directly provoke, challenge, pressure, or catalyze the character's internal transformation, clearly showing the external or internal friction points fueling the character's growth.",
+      "prompt_if_source": "Which primary conflicts directly provoke, challenge, or catalyze the transformation explored in the character arc '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character arcs are explicitly driven, challenged, or catalyzed by the conflict '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterArc_IMPACTED_BY_CharacterRelationship",
+      "from": ["character_arc"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Explicitly connects a CharacterArc to significant CharacterRelationships that strongly shape, influence, catalyze, or transform the associated character's personal development or emotional growth throughout the narrative.",
+      "prompt_if_source": "Which character relationships significantly shape, influence, catalyze, or emotionally transform the character arc '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character arcs are significantly shaped, influenced, catalyzed, or emotionally transformed by the character relationship '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterArc_GUIDED_BY_Archetype",
+      "from": ["character_arc"],
+      "to": ["archetype"],
+      "required": false,
+      "description": "Explicitly connects a CharacterArc to Archetypes that symbolically define, guide, or illuminate the pattern or nature of the character's internal journey, making clear which universal roles or symbolic patterns the character's transformation fulfills.",
+      "prompt_if_source": "Which archetypes symbolically define, guide, or illuminate the internal journey of the character arc '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character arcs are explicitly defined, guided, or symbolically illuminated by the archetype '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterArc_TRAIT_TRANSFORMATION",
+      "from": ["character_arc"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Explicitly links a CharacterArc to enduring Traits that the associated character acquires, strengthens, weakens, transforms, or abandons over the course of their narrative journey, capturing essential internal shifts that define their personal evolution.",
+      "prompt_if_source": "Which enduring character traits are acquired, strengthened, weakened, transformed, or abandoned within the character arc '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character arcs explicitly involve the acquisition, strengthening, weakening, transformation, or abandonment of the enduring trait '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Choice_MADE_BY_Character",
+      "from": ["choice"],
+      "to": ["character"],
+      "required": true,
+      "description": "Explicitly connects a pivotal Choice to the Character who consciously and actively makes the decision, highlighting explicit narrative agency, psychological ownership, and direct responsibility for the consequences of that choice.",
+      "prompt_if_source": "Who is the character actively and consciously making the pivotal choice '{node_name}' ({node_description})?",
+      "prompt_if_target": "List all pivotal choices explicitly and actively made by the character '{node_name}' ({node_description})."
+    },
+    {
+      "name": "Choice_RESULTS_IN_Event",
+      "from": ["choice"],
+      "to": ["event"],
+      "required": true,
+      "description": "Explicitly links a pivotal Choice to the specific narrative Event that concretely follows as a direct consequence, highlighting clear cause-and-effect narrative progression from internal character agency to external story action.",
+      "prompt_if_source": "What explicit narrative event concretely occurs as the direct result of the pivotal choice '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which pivotal choices directly and explicitly result in the narrative event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Choice_PRESENTED_AT_Event",
+      "from": ["choice"],
+      "to": ["event"],
+      "required": false,
+      "description": "Explicitly links a pivotal Choice to the specific Event at which the character is confronted by or presented with the decision, clearly identifying the narrative moment that frames, provokes, or demands character action or psychological commitment.",
+      "prompt_if_source": "During which explicit narrative event is the pivotal choice '{node_name}' ({node_description}) directly presented or confronted to the character?",
+      "prompt_if_target": "Which pivotal choices are explicitly presented to or confronted by characters during the event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Choice_EXPRESSES_Theme",
+      "from": ["choice"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly connects a pivotal Choice to a central narrative Theme or motif it vividly exemplifies, clarifies, reinforces, or embodies within the narrative, highlighting how character decisions directly illuminate deeper thematic truths.",
+      "prompt_if_source": "Which central themes or motifs are vividly exemplified, clarified, or embodied by the pivotal choice '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which pivotal choices vividly exemplify, clarify, reinforce, or embody the central narrative theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Choice_REFLECTS_Trait",
+      "from": ["choice"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Explicitly identifies enduring character traits or psychological qualities (e.g., courageous, loyal, vengeful) directly revealed, expressed, reinforced, or illuminated through a pivotal Choice. Highlights how key narrative decisions vividly showcase deeper, lasting aspects of a character's personality and internal motivations.",
+      "prompt_if_source": "Which enduring character traits or psychological qualities are vividly revealed, expressed, reinforced, or illuminated by the pivotal choice '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which pivotal choices vividly reveal, express, reinforce, or illuminate the enduring character trait '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Choice_HAS_Option",
+      "from": ["choice"],
+      "to": ["state"],
+      "required": true,
+      "description": "Explicitly connects a pivotal Choice to narrative States representing the various possible immediate narrative, situational, or character conditions that could directly result depending on which option is chosen, clearly establishing the choice's meaningful narrative alternatives.",
+      "prompt_if_source": "List all possible immediate narrative or character states explicitly resulting from each option of the pivotal choice '{node_name}' ({node_description}).",
+      "prompt_if_target": "Which pivotal choices explicitly include or directly lead to the narrative state '{node_name}' ({node_description}) as one of their defined alternatives?"
+    },
+    {
+      "name": "Choice_ASSOCIATED_WITH_Conflict",
+      "from": ["choice"],
+      "to": ["conflict"],
+      "required": false,
+      "description": "Explicitly identifies a direct narrative association between a choice and a conflict. This relationship captures two narrative truths simultaneously: (1) A conflict explicitly frames, presents, or necessitates a meaningful character choice, and/or (2) A character's choice explicitly influences, escalates, de-escalates, shapes, or resolves a particular conflict, highlighting the essential interplay between conflict and choice in narrative progression.",
+      "prompt_if_source": "Which conflicts explicitly frame, present, or necessitate this choice, or are directly influenced by it ('{node_name}' - {node_description})?",
+      "prompt_if_target": "Which choices explicitly result from, are framed by, or directly affect the conflict '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterRelationship_COMPARES_WITH_CharacterRelationship",
+      "from": ["character_relationship"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Explicitly indicates that a relationship mirrors, contrasts, parallels, or intentionally compares to another relationship within the narrative, highlighting differences or similarities.",
+      "prompt_if_source": "Which other character relationships does '{node_name}' ({node_description}) meaningfully mirror, contrast, or parallel?",
+      "prompt_if_target": "Which character relationships meaningfully mirror, contrast, or parallel '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "StoryPart_HAS_Character",
+      "from": ["story_part"],
+      "to": ["character"],
+      "required": false,
+      "description": "Marks every Character who has a notable on-screen/on-page presence in this specific narrative unit (series, season, episode, film, comic issue, etc.).",
+      "prompt_if_source": "Which characters appear or play a featured role in '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which narrative part(s) does the character '{node_name}' ({node_description}) appear or play a featured role?"
+    },
+    {
+      "name": "Plot_HAS_Character",
+      "from": ["plot"],
+      "to": ["character"],
+      "required": false,
+      "description": "Connects a plot arc to the central or significantly involved characters who drive or are directly impacted by the arc.",
+      "prompt_if_source": "Which characters are central to or significantly involved in the plot '{node_name}' ({node_description})?",
+      "prompt_if_target": "What plot arc(s) prominently features or involves the character '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "StoryPart_ADVANCES_Plot",
+      "from": ["story_part"],
+      "to": ["plot"],
+      "required": false,
+      "description": "Connects any StoryPart (series, season, episode, film, comic-issue, etc.) to the plot arc(s) it introduces, advances, or resolves.",
+      "prompt_if_source": "Which plot arcs are advanced, introduced, or resolved in '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which story part(s) (series, season, episode, film, etc.) is the plot arc '{node_name}' ({node_description}) developed or moved forward?"
+    },
+    {
+      "name": "Plot_SET_IN_Place",
+      "from": ["plot"],
+      "to": ["place"],
+      "required": false,
+      "description": "Connects plot arcs explicitly to places that are central to their narrative structure or progression.",
+      "prompt_if_source": "Which place or places significantly frame or are central to the plot '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which plot arcs significantly occur at or are fundamentally tied to the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "StoryPart_FEATURES_Conflict",
+      "from": ["story_part"],
+      "to": ["conflict"],
+      "required": false,
+      "description": "Connects a StoryPart (series, season, episode, film, etc.) to dramatic conflicts it introduces, escalates, or resolves.",
+      "prompt_if_source": "Which conflicts are introduced, escalated, or resolved in '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which story part(s) does the conflict '{node_name}' ({node_description}) prominently appear?"
+    },
+    {
+      "name": "CONFLICT_ZONE",
+      "from": ["conflict"],
+      "to": ["place"],
+      "required": false,
+      "description": "Identifies the primary location or setting where a conflict unfolds, highlighting its key geographical or narrative context.",
+      "prompt_if_source": "In which location or setting does the conflict '{node_name}' ({node_description}) primarily unfold?",
+      "prompt_if_target": "Which conflicts primarily occur at or significantly involve the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CONFLICT_INVOLVES_CHARACTER",
+      "from": ["conflict"],
+      "to": ["character"],
+      "required": false,
+      "description": "Explicitly identifies Characters directly participating in, driving, or significantly affected by the conflict.",
+      "prompt_if_source": "Which characters directly participate in, drive, or are notably affected by the conflict '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which conflicts explicitly involve or significantly impact the character '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Plot_CENTERS_ON_CharacterRelationship",
+      "from": ["plot"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Explicitly connects a plot arc to the central or significantly explored character relationship(s) (romantic, familial, rivalries, mentorship, etc.) that fundamentally drive narrative progression.",
+      "prompt_if_source": "Which character relationships (romantic, familial, rivalries, mentorship, etc.) fundamentally drive or are explored by the plot '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which plot arc(s) explicitly center upon or explore the character relationship '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Character_HAS_State",
+      "from": ["character"],
+      "to": ["state"],
+      "required": false,
+      "description": "Connects a Character to a transient State reflecting their temporary physical, emotional, or situational condition at a specific narrative moment (e.g., wounded, grieving, disguised). Use States for temporary conditions rather than enduring qualities (which are Traits).",
+      "prompt_if_source": "What temporary state (injured, angry, grieving, disguised) currently applies to character '{node_name}' ({node_description})? (For lasting personality traits or recurring qualities, use HAS_TRAIT instead.)",
+      "prompt_if_target": "Which character temporarily experiences the state '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterRelationship_HAS_State",
+      "from": ["character_relationship"],
+      "to": ["state"],
+      "required": false,
+      "description": "Connects a CharacterRelationship to a transient State reflecting its temporary status at a specific narrative moment (e.g., alliance strained, friendship strengthened). States are momentary conditions rather than enduring relationship dynamics or underlying traits.",
+      "prompt_if_source": "What temporary relationship state (strained, estranged, reconciled) currently applies to '{node_name}' ({node_description})? (For long-term, trait-driven relationship dynamics, consider SHAPES_RELATIONSHIP with a Trait.)",
+      "prompt_if_target": "Which character relationship temporarily experiences the state '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Plot_HAS_State",
+      "from": ["plot"],
+      "to": ["state"],
+      "required": false,
+      "description": "Links a Plot arc to a transient narrative state or specific phase reflecting its immediate progression (e.g., initiating, climaxing, resolving). Plot states represent snapshot conditions, not permanent narrative traits or enduring themes.",
+      "prompt_if_source": "What immediate narrative phase (setup, escalation, climax, resolution) currently applies to the plot '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which plot arc is currently described by the state '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Group_HAS_State",
+      "from": ["group"],
+      "to": ["state"],
+      "required": false,
+      "description": "Connects a Group to a transient state reflecting its temporary narrative condition at a given moment (e.g., scattered, united, ascendant). States reflect immediate narrative conditions, not the group's lasting identity or inherent attributes.",
+      "prompt_if_source": "What temporary group condition (united, divided, weakened, ascendant) currently applies to '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which group temporarily experiences the state '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Prop_HAS_State",
+      "from": ["prop"],
+      "to": ["state"],
+      "required": false,
+      "description": "Links a specific prop instance (individual artifact or object) to a transient narrative state reflecting its temporary condition or status at a particular narrative moment (e.g., broken, enchanted, lost, reforged). Use states for momentary conditions rather than enduring qualities.",
+      "prompt_if_source": "What immediate, temporary state (broken, enchanted, lost, reforged) currently applies to the specific prop '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which specific prop instance is temporarily described by the state '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "PropType_HAS_Trait",
+      "from": ["prop_type"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Connects a universal PropType to an enduring trait or quality that consistently defines every instance of that type (e.g., Lightsabers are energy-blades; Crowns are symbols of authority).",
+      "prompt_if_source": "Which enduring traits (e.g., energy-blade, ceremonial, firearm-caliber) consistently define the prop type '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which prop types consistently exhibit the enduring trait '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Prop_HAS_Trait",
+      "from": ["prop"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Connects an individual prop instance to an enduring trait or modification unique to that instance (e.g., custom-forged, right-handed, double-edged). Use when the instance diverges from the normal PropType qualities.",
+      "prompt_if_source": "Which enduring traits or custom qualities uniquely characterize the specific prop '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which specific prop instances uniquely exhibit the enduring trait '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Place_HAS_State",
+      "from": ["place"],
+      "to": ["state"],
+      "required": false,
+      "description": "Connects a Place to a transient state capturing its immediate narrative condition at a given moment (e.g., occupied, flourishing, abandoned, under siege). States represent momentary narrative situations rather than permanent characteristics of the place.",
+      "prompt_if_source": "What immediate temporary condition (occupied, abandoned, flourishing, ruined) currently applies to the place '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which place is temporarily described by the state '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Prop_ASSOCIATED_WITH_Place",
+      "from": ["prop"],
+      "to": ["place"],
+      "required": false,
+      "description": "Explicitly links a specific prop instance (individual artifact, object, or item) to a particular Place where it is currently kept, frequently found, famously stored, or symbolically connected in a direct narrative manner.",
+      "prompt_if_source": "With which particular place or location is the specific prop '{node_name}' ({node_description}) notably associated—currently stored, usually found, famously located, or symbolically connected?",
+      "prompt_if_target": "Which specific prop instances are notably associated—currently stored, usually found, famously located, or symbolically connected—with the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "PropType_ASSOCIATED_WITH_Place",
+      "from": ["prop_type"],
+      "to": ["place"],
+      "required": false,
+      "description": "Explicitly links a general prop type or universal category of objects (artifacts, technologies, items) to a specific Place deeply tied to its historical origin, symbolic meaning, cultural identity, or iconic association within the narrative.",
+      "prompt_if_source": "With which specific place or region is the general prop type '{node_name}' ({node_description}) historically, culturally, symbolically, or iconically associated?",
+      "prompt_if_target": "Which general prop types or universal categories of objects have a significant historical, cultural, symbolic, or iconic association with the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Conflict_HAS_State",
+      "from": ["conflict"],
+      "to": ["state"],
+      "required": false,
+      "description": "Connects a Conflict to a transient state capturing its immediate narrative stage at a given moment (e.g., escalating, stalemate, climaxing). Conflict states are momentary snapshots rather than enduring narrative themes or conflict definitions.",
+      "prompt_if_source": "What immediate conflict stage (escalation, stalemate, resolution) currently applies to '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which conflict temporarily occupies the state '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Conflict_ASSOCIATED_WITH_Trait",
+      "from": ["conflict"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Explicitly connects a Conflict to a Trait that significantly influences, causes, complicates, or thematically resonates with the conflict (e.g., a betrayal conflict linked to the trait 'distrustful'). This highlights character-driven or internal conflicts arising directly from enduring personality aspects rather than external circumstances alone.",
+      "prompt_if_source": "What enduring traits (personality aspects, emotional tendencies) significantly influence, cause, or resonate with the conflict '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which conflicts are significantly influenced, caused, or thematically resonant with the trait '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Trait_SUPERSEDED_BY",
+      "from": ["trait"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Marks a newly acquired enduring Trait that replaces or renders obsolete an earlier one.",
+      "prompt_if_source": "Which newer enduring trait supersedes '{node_name}'?",
+      "prompt_if_target": "Which earlier enduring trait is superseded by '{node_name}'?"
+    },
+    {
+      "name": "State_REFLECTS_Trait",
+      "from": ["state"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Indicates this short-lived temporary State is a momentary expression or manifestation of an enduring underlying Trait (e.g., an 'anger' state reflecting an underlying 'aggressive' trait).",
+      "prompt_if_source": "Which enduring trait is momentarily expressed or manifested by the temporary state '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which temporary states momentarily manifest or express the enduring trait '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "State_ENTERED_AT",
+      "from": ["state"],
+      "to": ["event"],
+      "required": false,
+      "description": "Connects a temporary State explicitly to the Event that initiated it, clearly marking the transient nature of the state by showing when it began.",
+      "prompt_if_source": "Which event initiated the temporary state '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which temporary state was first entered during event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "State_EXITED_AT",
+      "from": ["state"],
+      "to": ["event"],
+      "required": false,
+      "description": "Connects a temporary State explicitly to the Event at which it concluded, emphasizing the transient duration and narrative endpoint of the state.",
+      "prompt_if_source": "Which event concluded or resolved the temporary state '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which temporary state ended during event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Character_HAS_Trait",
+      "from": ["character"],
+      "to": ["trait"],
+      "required": false,
+      "description": "Links a Character to an enduring personality trait or capability consistently exhibited across multiple scenes or story arcs (e.g., Courageous, Cynical, Force-Sensitive). Traits describe long-lasting qualities, not temporary conditions or emotions.",
+      "prompt_if_source": "What persistent, recurring trait (brave, cautious, empathetic) is consistently exhibited by character '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character consistently exhibits the enduring trait '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Trait_ASSOCIATED_WITH_Archetype",
+      "from": ["trait"],
+      "to": ["archetype"],
+      "required": false,
+      "description": "Identifies Archetypes consistently defined or characterized by specific enduring Traits, highlighting persistent personality patterns rather than momentary conditions.",
+      "prompt_if_source": "Which archetypes consistently exhibit or are strongly defined by the enduring trait '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which enduring traits consistently define the archetype '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Trait_SHAPES_CharacterRelationship",
+      "from": ["trait"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Connects enduring Traits explicitly to character relationships that these traits notably define or continually influence. Traits represent persistent influences, not temporary states.",
+      "prompt_if_source": "Which character relationships are persistently influenced or defined by the enduring trait '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which enduring traits consistently shape the relationship '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Trait_CHANGED_BY_Event",
+      "from": ["trait"],
+      "to": ["event"],
+      "required": false,
+      "description": "Connects an enduring Trait explicitly to the Event that significantly shaped, introduced, or altered it. Traits represent lasting changes rather than momentary conditions.",
+      "prompt_if_source": "Which event permanently introduced, strengthened, or refined the enduring trait '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which enduring trait was permanently altered or introduced by the event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Event_FEATURES_Character",
+      "from": ["event"],
+      "to": ["character"],
+      "required": false,
+      "description": "Connects an event to the characters directly involved or significantly affected by it.",
+      "prompt_if_source": "Which characters are directly involved in or significantly impacted by the event '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which events does the character '{node_name}' ({node_description}) directly participate or become notably affected?"
+    },
+    {
+      "name": "StoryPart_FEATURES_Event",
+      "from": ["story_part"],
+      "to": ["event"],
+      "required": false,
+      "description": "Associates a StoryPart (film, episode, chapter, etc.) with the discrete narrative Events that occur within it.",
+      "prompt_if_source": "Which significant events take place in '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which story part does the event '{node_name}' ({node_description}) occur?"
+    },
+    {
+      "name": "Event_TRIGGERS_Conflict",
+      "from": ["event"],
+      "to": ["conflict"],
+      "required": false,
+      "description": "Marks the Event that initiates or dramatically escalates the conflict.",
+      "prompt_if_source": "What conflict(s) does this event '{node_name}' ({node_description}) trigger or escalate?",
+      "prompt_if_target": "Which events trigger or escalate the conflict '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Event_RESOLVES_Conflict",
+      "from": ["event"],
+      "to": ["conflict"],
+      "required": false,
+      "description": "Marks the Event at which a conflict is definitively resolved or ended.",
+      "prompt_if_source": "What conflicts are definitively resolved by the event '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which events is the conflict '{node_name}' ({node_description}) definitively resolved?"
+    },
+    {
+      "name": "Plot_CENTERS_ON_Conflict",
+      "from": ["plot"],
+      "to": ["conflict"],
+      "required": false,
+      "description": "Identifies the main conflict(s) around which a plot arc is fundamentally constructed.",
+      "prompt_if_source": "What central conflict or conflicts is the plot '{node_name}' ({node_description}) fundamentally built around?",
+      "prompt_if_target": "Which plot arcs are primarily structured around the conflict '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Conflict_EXPRESSES_Theme",
+      "from": ["conflict"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Marks that a conflict directly illustrates or exemplifies a narrative theme or motif.",
+      "prompt_if_source": "What themes or ideas does the conflict '{node_name}' ({node_description}) illustrate or embody?",
+      "prompt_if_target": "Which conflicts illustrate or embody the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Plot_EXPLORES_Theme",
+      "from": ["plot"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly connects a plot arc to central themes or motifs it explores or expresses.",
+      "prompt_if_source": "What central themes or motifs does the plot '{node_name}' ({node_description}) explicitly explore?",
+      "prompt_if_target": "Which plot arcs explicitly explore or express the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "StoryPart_EXPLORES_Theme",
+      "from": ["story_part"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Links a StoryPart (series, season, episode, film, etc.) to the thematic concepts it explicitly explores or highlights.",
+      "prompt_if_source": "What themes are prominently explored in '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which story part is the theme '{node_name}' ({node_description}) prominently explored?"
+    },
+    {
+      "name": "Conflict_AFFECTS_Group",
+      "from": ["conflict"],
+      "to": ["group"],
+      "required": false,
+      "description": "Indicates a conflict significantly affects a group—strengthening, weakening, uniting, dividing, or transforming it.",
+      "prompt_if_source": "Which groups are notably affected—strengthened, weakened, united, or divided—by the conflict '{node_name}' ({node_description})?",
+      "prompt_if_target": "What conflicts significantly affect—strengthen, weaken, unite, or divide—the group '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterRelationship_AFFECTS_Group",
+      "from": ["character_relationship"],
+      "to": ["group"],
+      "required": false,
+      "description": "Explicitly identifies groups or factions significantly impacted or defined by a character relationship.",
+      "prompt_if_source": "Which groups or factions are notably impacted or influenced by the relationship '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character relationships significantly influence or affect the group '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Event_AFFECTS_Group",
+      "from": ["event"],
+      "to": ["group"],
+      "required": false,
+      "description": "Explicitly links an event to groups significantly affected by it—forming, strengthening, weakening, dividing, uniting, or transforming them.",
+      "prompt_if_source": "Which groups are significantly affected—formed, strengthened, weakened, united, divided, or transformed—by the event '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which events notably affect or alter the group '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "StoryPart_FEATURES_CharacterRelationship",
+      "from": ["story_part"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Indicates that the narrative unit explicitly depicts, explores, or foregrounds this character relationship (e.g., an episode centering on Luke & Vader’s father-son dynamic).",
+      "prompt_if_source": "Which character relationships are meaningfully portrayed or explored in '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which story part (series, season, episode, film, etc.) is the relationship '{node_name}' ({node_description}) prominently featured or developed?"
+    },
+    {
+      "name": "Universe_HAS_Place",
+      "from": ["universe"],
+      "to": ["place"],
+      "required": false,
+      "description": "Universe contains canonical locations.",
+      "prompt_if_source": "List important places found in {node_name} ({node_description}).",
+      "prompt_if_target": "Which universe is the location {node_name} ({node_description}) set in?"
+    },
+    {
+      "name": "StoryPart_FEATURES_Place",
+      "from": ["story_part"],
+      "to": ["place"],
+      "required": false,
+      "description": "Indicates that one or more scenes or segments of the StoryPart (episode, film, issue, etc.) are set in the specified Place.",
+      "prompt_if_source": "In which place or places (settings or locations) does '{node_name}' ({node_description}) take place?",
+      "prompt_if_target": "Within which story part or parts does the location '{node_name}' ({node_description}) appear as a setting?"
+    },
+    {
+      "name": "Character_ASSOCIATED_WITH_Place",
+      "from": ["character"],
+      "to": ["place"],
+      "required": false,
+      "description": "Explicitly connects a Character to a narratively significant Place, indicating a strong symbolic, emotional, residential, or operational link.",
+      "prompt_if_source": "Which important places (homes, headquarters, symbolic locations) are strongly associated with '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which characters have significant ties or narrative associations to the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterRelationship_ASSOCIATED_WITH_Place",
+      "from": ["character_relationship"],
+      "to": ["place"],
+      "required": false,
+      "description": "Explicitly connects a CharacterRelationship to a narratively significant Place, marking a setting where the relationship originated, developed, or experienced pivotal moments.",
+      "prompt_if_source": "Which places are narratively significant to the relationship '{node_name}' ({node_description}), marking where it began, developed, or experienced key events?",
+      "prompt_if_target": "Which character relationships have significant narrative ties—origin, development, or pivotal events—to the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Group_ASSOCIATED_WITH_Place",
+      "from": ["group"],
+      "to": ["place"],
+      "required": false,
+      "description": "Explicitly connects a Group to a Place where it has significant narrative ties, such as a primary base, homeland, territory, operational headquarters, or culturally symbolic location.",
+      "prompt_if_source": "Which places serve as significant bases, territories, headquarters, or culturally symbolic locations for the group '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which groups have significant ties—bases, territories, headquarters, or symbolic connections—to the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Plot_INVOLVES_Prop",
+      "from": ["plot"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly connects a plot arc to specific prop instances (individual objects or artifacts) that directly play significant narrative, symbolic, or practical roles within the plot—meaningfully influencing events, character choices, thematic depth, stakes, or resolutions, without necessarily being the sole focus.",
+      "prompt_if_source": "Which specific prop instances (individual artifacts, objects, or personal items) directly play significant narrative, symbolic, or practical roles in the plot '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which plot arcs does the specific prop '{node_name}' ({node_description}) directly play significant narrative, symbolic, or practical roles?"
+    },
+    {
+      "name": "Plot_INVOLVES_PropType",
+      "from": ["plot"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly connects a plot arc to general prop types or universal categories of objects or artifacts that consistently or symbolically play significant narrative, symbolic, or practical roles—meaningfully contributing thematic depth, narrative structure, or character arcs without necessarily focusing on specific instances.",
+      "prompt_if_source": "Which general prop types (categories of artifacts, weapons, symbolic items) consistently or symbolically play important narrative, symbolic, or practical roles in the plot '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which plot arcs does the general prop type '{node_name}' ({node_description}) consistently or symbolically play significant narrative, symbolic, or practical roles?"
+    },
+    {
+      "name": "CharacterRelationship_DEFINING_BY_Event",
+      "from": ["character_relationship"],
+      "to": ["event"],
+      "required": false,
+      "description": "Identifies events explicitly marking key turning points—beginnings, climaxes, significant shifts, or endings—in a character relationship.",
+      "prompt_if_source": "Which events explicitly mark key turning points, beginnings, climaxes, or endings in '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character relationships explicitly have '{node_name}' ({node_description}) as a key turning point, climax, or ending?"
+    },
+    {
+      "name": "CharacterRelationship_REPRESENTED_BY_Prop",
+      "from": ["character_relationship"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly identifies a specific prop instance (individual artifact or object) uniquely symbolizing, embodying, or expressing the nature, emotional depth, significant history, or pivotal moments of a character relationship, enhancing symbolic resonance through the prop's unique narrative context and details.",
+      "prompt_if_source": "Which specific prop instances (individual artifacts, heirlooms, or symbolic objects) uniquely symbolize, embody, or represent the nature, emotional depth, or history of the relationship '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character relationships are uniquely symbolized, embodied, or represented by the specific prop '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CharacterRelationship_REPRESENTED_BY_PropType",
+      "from": ["character_relationship"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly identifies a general prop type or universal category of artifacts or objects that consistently symbolize, embody, or express the thematic nature, emotional resonance, recurring motifs, or symbolic meanings of a character relationship across narrative contexts, independent of specific individual prop instances.",
+      "prompt_if_source": "Which general prop types (categories of symbolic artifacts or objects) consistently symbolize, embody, or represent the thematic nature or emotional resonance of the relationship '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which character relationships are consistently symbolized, embodied, or represented by the general prop type '{node_name}' ({node_description}) across narrative contexts?"
+    },
+    {
+      "name": "Universe_HAS_Prop",
+      "from": ["universe"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly identifies specific prop instances (individual artifacts or objects) that canonically exist, are explicitly acknowledged, or hold narratively significant presence within the fictional universe, grounding the narrative in detailed, explicit canonical elements.",
+      "prompt_if_source": "List specific props (individual artifacts or objects) that explicitly exist, are acknowledged, or narratively significant within the fictional universe '{node_name}' ({node_description}).",
+      "prompt_if_target": "In which fictional universe does the specific prop '{node_name}' ({node_description}) explicitly exist or hold canonical narrative significance?"
+    },
+    {
+      "name": "Universe_HAS_PropType",
+      "from": ["universe"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly identifies general prop types or universal classes of artifacts or objects that canonically exist, are consistently acknowledged, or have significant narrative or thematic roles within the fictional universe, establishing broad narrative coherence and thematic depth.",
+      "prompt_if_source": "List general prop types (classes of artifacts, weapons, symbolic objects) that canonically exist or have significant narrative or thematic roles within the fictional universe '{node_name}' ({node_description}).",
+      "prompt_if_target": "In which fictional universe does the general prop type '{node_name}' ({node_description}) canonically exist or consistently play significant narrative or thematic roles?"
+    },
+    {
+      "name": "StoryPart_FEATURES_Prop",
+      "from": ["story_part"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly identifies particular, specific props (individual objects or artifacts) that physically appear, are used, or play a narratively significant role within a specific StoryPart (episode, film, chapter, etc.). This connects to individual instances (e.g., Luke's specific lightsaber).",
+      "prompt_if_source": "List specific props (individual objects or artifacts) that physically appear or play a significant role within '{node_name}' ({node_description}).",
+      "prompt_if_target": "In which narrative StoryParts does the specific prop '{node_name}' ({node_description}) physically appear or play a significant role?"
+    },
+    {
+      "name": "StoryPart_FEATURES_PropType",
+      "from": ["story_part"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly identifies general categories or types of props (universal classes of objects or artifacts) that prominently feature or hold significant narrative importance within a specific StoryPart, independent of particular individual instances. This connects general PropTypes rather than particular Prop instances (e.g., lightsabers as a general class of weapon).",
+      "prompt_if_source": "List general prop types (classes of objects or artifacts) that prominently feature or are significant within '{node_name}' ({node_description}).",
+      "prompt_if_target": "In which narrative StoryParts does the prop type '{node_name}' ({node_description}) prominently feature or hold significant narrative importance?"
+    },
+    {
+      "name": "Character_ASSOCIATED_WITH_Prop",
+      "from": ["character"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly links a character to a specific prop instance (individual object or artifact), denoting explicit narrative relationships such as direct possession, frequent personal usage, creation, historical significance, or deep symbolic resonance with that particular object.",
+      "prompt_if_source": "List specific prop instances (individual artifacts, personal items, heirlooms) explicitly possessed by, frequently used by, created by, or symbolically significant to '{node_name}' ({node_description}).",
+      "prompt_if_target": "Which characters explicitly possess, frequently use, created, or have significant symbolic ties to the specific prop '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Character_ASSOCIATED_WITH_PropType",
+      "from": ["character"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly links a character to a general type or class of prop (universal object or artifact), indicating recurring usage, habitual association, symbolic identification, thematic resonance, or characteristic equipment for that character type, independent of specific individual instances.",
+      "prompt_if_source": "Which general prop types or classes (weapons, artifacts, symbolic items) are habitually associated with, characteristic of, or symbolically tied to '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which characters have habitual associations, symbolic ties, or characteristic connections to the general prop type '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Conflict_INVOLVES_Prop",
+      "from": ["conflict"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly connects a conflict to particular prop instances (individual objects or artifacts) that directly serve as catalysts, key elements, prizes, weapons, or symbolic focal points significantly contributing to the conflict's existence, escalation, stakes, or resolution.",
+      "prompt_if_source": "List specific prop instances (individual artifacts, personal items, weapons) explicitly serving as catalysts, prizes, weapons, symbolic focal points, or otherwise significantly contributing to the conflict '{node_name}' ({node_description}).",
+      "prompt_if_target": "In which conflicts does the specific prop '{node_name}' ({node_description}) explicitly serve as a catalyst, prize, weapon, symbolic focal point, or otherwise play a significant role?"
+    },
+    {
+      "name": "Conflict_INVOLVES_PropType",
+      "from": ["conflict"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly links a conflict to a general prop type or universal category of artifact or object that consistently or symbolically serves as catalysts, prizes, weapons, or symbolic elements, significantly shaping the existence, escalation, stakes, thematic resonance, or resolution of the conflict narrative.",
+      "prompt_if_source": "Which general prop types (categories of artifacts, weapons, symbolic objects) consistently or symbolically contribute to, escalate, represent stakes in, or significantly influence the conflict '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which conflicts does the general prop type '{node_name}' ({node_description}) consistently or symbolically serve as a catalyst, prize, weapon, or thematic focal point?"
+    },
+    {
+      "name": "Event_INVOLVES_Prop",
+      "from": ["event"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly identifies particular prop instances (individual objects or artifacts) significantly involved in an event, directly serving as catalysts, targets, tools, prizes, or being notably impacted, changed, or symbolically significant because of that event.",
+      "prompt_if_source": "List specific prop instances (individual artifacts, objects, or personal items) explicitly acting as catalysts, targets, tools, prizes, or otherwise meaningfully influencing or being notably impacted by the event '{node_name}' ({node_description}).",
+      "prompt_if_target": "In which events does the specific prop '{node_name}' ({node_description}) explicitly serve as a catalyst, target, tool, prize, or become significantly impacted or symbolically important?"
+    },
+    {
+      "name": "Event_INVOLVES_PropType",
+      "from": ["event"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly identifies general prop types or universal categories of objects or artifacts significantly involved in an event, consistently or symbolically serving as catalysts, targets, thematic symbols, or essential narrative tools, or being meaningfully influenced or represented by that event.",
+      "prompt_if_source": "Which general prop types (classes of artifacts, weapons, symbolic objects) consistently or symbolically serve as catalysts, targets, or thematic elements in, or are meaningfully represented or impacted by, the event '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which events does the general prop type '{node_name}' ({node_description}) consistently or symbolically serve as a catalyst, target, thematic element, or become meaningfully represented or impacted?"
+    },
+    {
+      "name": "Universe_HAS_Group",
+      "from": ["universe"],
+      "to": ["group"],
+      "required": false,
+      "description": "Universe defines factions, organisations, cultures.",
+      "prompt_if_source": "List the groups or factions operating within {node_name} ({node_description}).",
+      "prompt_if_target": "What universe does the group {node_name} ({node_description}) originate from?"
+    },
+    {
+      "name": "Group_SUBGROUP_OF",
+      "from": ["group"],
+      "to": ["group"],
+      "required": false,
+      "description": "Indicates that one group is formally or informally a part, division, subset, or subdivision of another larger or parent group (e.g., First Order as a remnant of Galactic Empire).",
+      "prompt_if_source": "Of what larger group or organization is '{node_name}' ({node_description}) a subgroup or part?",
+      "prompt_if_target": "Which groups or organizations are subgroups, subdivisions, or subsets of '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Group_ALLIED_WITH",
+      "from": ["group"],
+      "to": ["group"],
+      "required": false,
+      "description": "Indicates that two groups share mutual support, cooperation, or partnership toward a common goal or against a common enemy.",
+      "prompt_if_source": "Which groups or factions is '{node_name}' ({node_description}) allied with or cooperating closely?",
+      "prompt_if_target": "Which groups or factions are allied or cooperating closely with '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Group_OPPOSED_TO",
+      "from": ["group"],
+      "to": ["group"],
+      "required": false,
+      "description": "Marks explicit rivalry, conflict, hostility, or fundamental opposition between two groups or factions.",
+      "prompt_if_source": "Which groups or factions does '{node_name}' ({node_description}) explicitly oppose or have antagonistic relations with?",
+      "prompt_if_target": "Which groups or factions explicitly oppose or have antagonistic relations with '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Group_ASSOCIATED_WITH",
+      "from": ["group"],
+      "to": ["group"],
+      "required": false,
+      "description": "Indicates a narratively significant connection, parallel status, historical link, or thematic similarity between two distinct groups or factions, without hierarchical subordination or explicit alliance/opposition.",
+      "prompt_if_source": "Which groups or factions have significant narrative or thematic associations with '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which groups or factions have significant narrative or thematic associations with '{node_name}' ({node_description})?"
+    },    
+    {
+      "name": "StoryPart_FEATURES_Group",
+      "from": ["story_part"],
+      "to": ["group"],
+      "required": false,
+      "description": "Marks that a particular group, faction, organization, or culture appears or plays a significant role within the given StoryPart (episode, film, chapter, etc.).",
+      "prompt_if_source": "Which groups or factions appear or have significance in '{node_name}' ({node_description})?",
+      "prompt_if_target": "In which story part does the group '{node_name}' ({node_description}) appear or play a significant role?"
+    },
+    {
+      "name": "Character_AFFILIATED_WITH_Group",
+      "from": ["character"],
+      "to": ["group"],
+      "required": false,
+      "description": "Explicitly connects a Character to a group, faction, organization, or culture, indicating membership, alliance, leadership, or positive affiliation.",
+      "prompt_if_source": "Which groups or organizations is '{node_name}' ({node_description}) a member, ally, or positively affiliated with?",
+      "prompt_if_target": "Which characters are members or positively affiliated with the group '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Character_OPPOSED_TO_Group",
+      "from": ["character"],
+      "to": ["group"],
+      "required": false,
+      "description": "Explicitly connects a Character to a group, faction, organization, or culture they are actively opposed to, rivals with, or antagonistically related to.",
+      "prompt_if_source": "Which groups or organizations is '{node_name}' ({node_description}) actively opposed to, rivals with, or antagonistically related to?",
+      "prompt_if_target": "Which characters are explicitly opposed to, rival, or are antagonistic toward the group '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Universe_HAS_Theme",
+      "from": ["universe"],
+      "to": ["theme"],
+      "required": false,
+      "description": "High-level themes that permeate the franchise.",
+      "prompt_if_source": "What overarching themes are explored across {node_name} ({node_description})?",
+      "prompt_if_target": "Which universe consistently explores the theme {node_name} ({node_description})?"
+    },
+    {
+      "name": "Prop_SYMBOLIZES_Theme",
+      "from": ["prop"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly links a specific prop instance (individual object or artifact) directly to a central narrative theme or motif it uniquely symbolizes, embodies, or represents within the narrative, deepening emotional resonance and thematic significance through that particular object's unique history and context.",
+      "prompt_if_source": "What central themes or motifs does the specific prop '{node_name}' ({node_description}) uniquely symbolize, embody, or represent within the narrative?",
+      "prompt_if_target": "Which specific props (individual artifacts, objects, heirlooms) uniquely symbolize, embody, or represent the theme '{node_name}' ({node_description}) within the narrative?"
+    },
+    {
+      "name": "PropType_SYMBOLIZES_Theme",
+      "from": ["prop_type"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly connects a general prop type (universal class of objects or artifacts) to central narrative themes or motifs that this universal object category consistently symbolizes, embodies, or evokes across narratives, enhancing broad thematic resonance independent of specific individual instances.",
+      "prompt_if_source": "Which central themes or motifs does the general prop type '{node_name}' ({node_description}) consistently symbolize, embody, or evoke across narratives?",
+      "prompt_if_target": "Which general prop types consistently symbolize, embody, or evoke the theme '{node_name}' ({node_description}) across narratives?"
+    },
+    {
+      "name": "CharacterRelationship_ILLUSTRATES_Theme",
+      "from": ["character_relationship"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Links a character relationship explicitly to a theme it meaningfully illustrates or exemplifies.",
+      "prompt_if_source": "What themes or motifs does the character relationship '{node_name}' ({node_description}) meaningfully illustrate?",
+      "prompt_if_target": "Which character relationships meaningfully illustrate the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Place_EVOKES_Theme",
+      "from": ["place"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Associates a significant location or place with a theme or mood it strongly evokes or symbolizes within the narrative.",
+      "prompt_if_source": "What themes or motifs does the place '{node_name}' ({node_description}) strongly evoke or symbolize?",
+      "prompt_if_target": "Which places strongly evoke or symbolize the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Event_DRAMATIZES_Theme",
+      "from": ["event"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly connects an event to a theme it dramatizes, highlights, or illustrates within the narrative.",
+      "prompt_if_source": "What central themes or ideas does the event '{node_name}' ({node_description}) dramatize or illustrate?",
+      "prompt_if_target": "Which events dramatize or illustrate the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Group_REPRESENTS_Theme",
+      "from": ["group"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly connects a Group to a theme it represents, illustrates, or embodies within the narrative.",
+      "prompt_if_source": "What central themes or motifs does the group '{node_name}' ({node_description}) represent or embody?",
+      "prompt_if_target": "Which groups represent or embody the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Universe_FEATURES_Archetype",
+      "from": ["universe"],
+      "to": ["archetype"],
+      "required": false,
+      "description": "Reusable archetypes defined at the franchise level.",
+      "prompt_if_source": "List archetypes that commonly appear across {node_name} ({node_description}).",
+      "prompt_if_target": "In which universe is the archetype {node_name} ({node_description}) officially recognised?"
+    },
+    {
+      "name": "Archetype_ASSIGNED_TO_Character",
+      "from": ["archetype"],
+      "to": ["character"],
+      "required": false,
+      "description": "Connects an Archetype (e.g., Hero, Trickster, Mentor) to a Character who embodies or significantly expresses this archetypal role within the narrative.",
+      "prompt_if_source": "Which characters embody or significantly express the archetype '{node_name}' ({node_description})?",
+      "prompt_if_target": "What archetypal role or roles (e.g., Hero, Mentor, Trickster) does the character '{node_name}' ({node_description}) embody in the narrative?"
+    },
+    {
+      "name": "Archetype_SYMBOLIZED_BY_Prop",
+      "from": ["archetype"],
+      "to": ["prop"],
+      "required": false,
+      "description": "Explicitly connects an archetype to specific prop instances (individual artifacts or objects) uniquely symbolizing, representing, or embodying that archetype’s core narrative role, thematic resonance, or symbolic identity within specific narrative contexts.",
+      "prompt_if_source": "List specific prop instances (individual artifacts or symbolic objects) that uniquely symbolize, represent, or embody the archetype '{node_name}' ({node_description}) within the narrative.",
+      "prompt_if_target": "Which archetypes are uniquely symbolized, represented, or embodied by the specific prop '{node_name}' ({node_description}) within the narrative?"
+    },
+    {
+      "name": "Archetype_SYMBOLIZED_BY_PropType",
+      "from": ["archetype"],
+      "to": ["prop_type"],
+      "required": false,
+      "description": "Explicitly connects an archetype to general prop types or universal categories of artifacts or objects that consistently symbolize, represent, or embody that archetype’s core narrative role, thematic resonance, or symbolic identity across narrative contexts, independent of specific individual prop instances.",
+      "prompt_if_source": "Which general prop types (categories of artifacts, symbolic objects, weapons) consistently symbolize, represent, or embody the archetype '{node_name}' ({node_description}) across narratives?",
+      "prompt_if_target": "Which archetypes are consistently symbolized, represented, or embodied by the general prop type '{node_name}' ({node_description}) across narratives?"
+    },
+    {
+      "name": "Archetype_MANIFESTED_IN_Place",
+      "from": ["archetype"],
+      "to": ["place"],
+      "required": false,
+      "description": "Explicitly connects Archetypes to places or settings that significantly symbolize or embody them.",
+      "prompt_if_source": "Which places or settings significantly symbolize or embody the archetype '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which archetypes are significantly embodied or symbolized by the place '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Archetype_EXPRESSED_IN_Plot",
+      "from": ["archetype"],
+      "to": ["plot"],
+      "required": false,
+      "description": "Explicitly links archetypes to plot arcs that significantly illustrate, embody, or follow archetypal patterns.",
+      "prompt_if_source": "Which plot arcs significantly illustrate or embody the archetype '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which archetypal patterns or structures significantly define the plot '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Universe_HAS_Event",
+      "from": ["universe"],
+      "to": ["event"],
+      "required": false,
+      "description": "Universe includes significant canonical events, historical milestones, conflicts, celebrations, and turning points within its timeline.",
+      "prompt_if_source": "List major canonical events (historical milestones, conflicts, celebrations, turning points, etc.) that occur within the universe '{node_name}' ({node_description}).",
+      "prompt_if_target": "Which fictional universe is the event '{node_name}' ({node_description}) canonically part of?"
+    },
+    {
+      "name": "Event_AFFECTS_CharacterRelationship",
+      "from": ["event"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Explicitly connects an event to character relationships that it significantly affects—forming, strengthening, weakening, transforming, or ending them.",
+      "prompt_if_source": "Which character relationships are significantly affected or transformed by the event '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which events notably form, strengthen, weaken, transform, or end the character relationship '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Conflict_AFFECTS_CharacterRelationship",
+      "from": ["conflict"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Indicates a conflict significantly affects a character relationship—strengthening, straining, evolving, or transforming it.",
+      "prompt_if_source": "Which character relationships are notably affected—strengthened, strained, or transformed—by the conflict '{node_name}' ({node_description})?",
+      "prompt_if_target": "What conflicts significantly affect—strengthen, strain, or transform—the relationship '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Choice_AFFECTS_CharacterRelationship",
+      "from": ["choice"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Explicitly connects a pivotal Choice to a Character Relationship it significantly impacts, alters, deepens, or defines. Highlights narrative choices that reshape, strengthen, strain, initiate, dissolve, or redefine interpersonal bonds, emphasizing the emotional and relational consequences arising from character decisions.",
+      "prompt_if_source": "Which character relationships are explicitly reshaped, strengthened, strained, initiated, dissolved, or significantly impacted by the pivotal choice '{node_name}' ({node_description})?",
+      "prompt_if_target": "List all pivotal choices explicitly reshaping, strengthening, straining, initiating, dissolving, or significantly impacting the relationship '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Event_AFFECTS_Plot",
+      "from": ["event"],
+      "to": ["plot"],
+      "required": false,
+      "description": "Explicitly identifies an event as critically important to a plot arc, marking key turning points, initiating or escalating conflicts, advancing storylines, or providing climaxes or resolutions.",
+      "prompt_if_source": "Which plot arcs have '{node_name}' ({node_description}) as a critical event—initiating, escalating, climaxing, or resolving major storylines?",
+      "prompt_if_target": "Which events are critically important—initiating, escalating, climaxing, or resolving—for the plot arc '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Plot_INVOLVES_Group",
+      "from": ["plot"],
+      "to": ["group"],
+      "required": false,
+      "description": "Explicitly connects a plot arc to groups or factions significantly involved, driving narrative events, affected by outcomes, or central to the plot's development.",
+      "prompt_if_source": "Which groups or factions significantly drive, influence, or are centrally affected by the plot '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which plot arcs significantly involve or impact the group '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "Event_OCCURS_At_Place",
+      "from": ["event"],
+      "to": ["place"],
+      "required": false,
+      "description": "Explicitly identifies the location or setting where an event occurs, highlighting places that significantly influence, frame, or center narrative events and turning points.",
+      "prompt_if_source": "At which narratively significant place or setting does the event '{node_name}' ({node_description}) occur, influencing or framing its narrative importance?",
+      "prompt_if_target": "What notable narrative events or turning points occur at the place '{node_name}' ({node_description}), significantly influencing the overall storyline?"
+    },
+    {
+      "name": "MANIFESTS_ARCHETYPE",
+      "from": ["event"],
+      "to": ["archetype"],
+      "required": false,
+      "description": "Connects an event explicitly to archetypes it notably embodies or manifests, highlighting significant narrative symbolism or archetypal resonance.",
+      "prompt_if_source": "What archetypal motifs or roles does the event '{node_name}' ({node_description}) notably embody or manifest?",
+      "prompt_if_target": "Which events notably embody or manifest the archetype '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "RELATES_TO_ARCHETYPE",
+      "from": ["archetype"],
+      "to": ["archetype"],
+      "required": false,
+      "description": "Explicitly identifies meaningful narrative or thematic connections between two Archetypes, such as complementary roles, oppositional dynamics, or symbolic pairings.",
+      "prompt_if_source": "Which other archetypes meaningfully complement, oppose, or symbolically relate to the archetype '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which archetypes meaningfully complement, oppose, or symbolically relate to '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "ILLUSTRATED_BY_RELATIONSHIP",
+      "from": ["archetype"],
+      "to": ["character_relationship"],
+      "required": false,
+      "description": "Explicitly identifies character relationships that prominently illustrate or exemplify the archetype.",
+      "prompt_if_source": "Which character relationships explicitly illustrate or exemplify the archetype '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which archetype(s) is illustrated or exemplified by the relationship '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "DRAMATIZED_BY_EVENT",
+      "from": ["archetype"],
+      "to": ["event"],
+      "required": false,
+      "description": "Links an archetype to events that notably dramatize, embody, or exemplify it within the narrative.",
+      "prompt_if_source": "Which events notably dramatize or embody the archetype '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which archetypes are notably dramatized or embodied by the event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "ARCHETYPE_EMBODIES_THEME",
+      "from": ["archetype"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Explicitly connects an Archetype to one or more Themes it inherently embodies, symbolizes, or consistently evokes within the narrative.",
+      "prompt_if_source": "Which narrative themes or motifs does the archetype '{node_name}' ({node_description}) inherently embody or symbolize?",
+      "prompt_if_target": "Which archetypes inherently embody or symbolize the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CHARACTER_EMBODIES_THEME",
+      "from": ["character"],
+      "to": ["theme"],
+      "required": false,
+      "description": "Connects a Character to a theme they notably embody or personify within the narrative.",
+      "prompt_if_source": "What central themes or ideas does the character '{node_name}' ({node_description}) embody or personify?",
+      "prompt_if_target": "Which characters notably embody or personify the theme '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "CAUSES_EVENT",
+      "from": ["event"],
+      "to": ["event"],
+      "required": false,
+      "description": "Explicitly marks one event as directly causing, leading to, or prompting another subsequent event.",
+      "prompt_if_source": "Which event(s) does '{node_name}' ({node_description}) directly cause or lead to?",
+      "prompt_if_target": "Which event(s) directly cause or lead to the event '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "IMMEDIATELY_PRECEDES",
+      "from": ["event"],
+      "to": ["event"],
+      "required": false,
+      "description": "Explicitly identifies one event as immediately occurring just before another event, without significant intervening narrative events, capturing direct sequential narrative continuity.",
+      "prompt_if_source": "Which event immediately follows '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which event immediately precedes '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "HAPPENS_DURING",
+      "from": ["event"],
+      "to": ["event"],
+      "required": false,
+      "description": "Indicates an event occurs entirely within the timeframe or context of a longer or encompassing event (e.g., 'Luke duels Vader' happens during 'Battle of Endor').",
+      "prompt_if_source": "What larger or longer-spanning event does the event '{node_name}' ({node_description}) happen entirely within?",
+      "prompt_if_target": "What events occur entirely within the timeframe or context of '{node_name}' ({node_description})?"
+    },
+    {
+      "name": "HAPPENS_CONCURRENTLY_WITH",
+      "from": ["event"],
+      "to": ["event"],
+      "required": false,
+      "description": "Explicitly identifies two distinct events occurring simultaneously or in parallel within the narrative, providing parallel narrative threads.",
+      "prompt_if_source": "Which event(s) happen simultaneously or concurrently with '{node_name}' ({node_description})?",
+      "prompt_if_target": "Which event(s) happen simultaneously or concurrently with '{node_name}' ({node_description})?"
+    }
+  ]
+}

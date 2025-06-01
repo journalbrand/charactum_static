@@ -1,0 +1,352 @@
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/base';
+@use 'base/variables';
+@use 'layout/main-layout';
+@use 'utilities/helpers';
+@use 'utilities/debug';
+
+// Home (main app) specific styles
+@use '../home/styles/forms';
+@use '../home/styles/AddNodePanel';
+@use '../home/styles/AddRelationshipPanel';
+@use '../home/styles/CandidateAnalysisPanel';
+@use '../home/styles/DatabaseControls';
+@use '../home/styles/GenerateRelatedNodesPanel';
+@use '../home/styles/Graph';
+@use '../home/styles/GraphStatisticsPanel';
+@use '../home/styles/Header';
+@use '../home/styles/ContextPanel';
+@use '../home/styles/ContextPanelNodeDetailsPanel';
+@use '../home/styles/ContextPanelRelationshipDetailsPanel';
+@use '../home/styles/AccordionSection';
+@use '../home/styles/ConfirmDialog';
+@use '../home/styles/SearchPanel';
+
+// Page Specific Styles
+@use '../grammar/styles/GrammarPage';
+@use '../grammar/styles/NodeTypeDetailsPanel';
+@use '../grammar/styles/RelationshipTypeDetailsPanel';
+@use '../grammar/styles/GrammarStatisticsPanel';
+@use '../grammar/styles/AddNodeTypeForm';
+@use '../grammar/styles/AddRelationshipTypeForm';
+@use '../about/styles/AboutPage'; // Added import for AboutPage styles
+
+
+/* Common Component Styles */
+.card {
+  background-color: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--spacing-md);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Generic panel container reused across the app */
+.panel {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-md);
+}
+
+.form-base {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.form-group label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-sm);
+  gap: var(--spacing-sm);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Button styles */
+.btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.btn-primary:active {
+  background-color: var(--btn-primary-active);
+}
+
+.btn-secondary {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--btn-secondary-hover);
+}
+
+.btn-secondary:active {
+  background-color: var(--btn-secondary-active);
+}
+
+.btn-danger {
+  background-color: var(--btn-danger-bg);
+  color: var(--btn-danger-text);
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: var(--btn-danger-hover);
+}
+
+.btn-danger:active {
+  background-color: var(--btn-danger-active);
+}
+
+/* Scrollbar styling */
+.scrollable {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-muted) transparent;
+}
+
+.scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: var(--text-muted);
+  border-radius: 4px;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #213547;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  /* padding-bottom: 60px; // Removed as footer is now part of App grid */
+}
+
+#root {
+  width: 100%; /* Changed from max-width to allow full expansion */
+  /* margin: 0 auto; /* Removed, no longer needed for centering a full-width element */
+  /* padding: 2rem; /* Removing padding to allow edge-to-edge content */
+  /* text-align: center; /* Consider if this is still desired for all content in #root */
+  height: 100%; /* Ensure #root takes full viewport height */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #1a1a1a;
+  }
+  body {
+    background-color: #242424;
+  }
+} 
+
+/* Reset default margins and set box-sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-size: clamp(14px, 1vw, 16px);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Component-specific styles */
+
+// Footer Panel styles
+.footer-pane-container {
+  grid-column: 1 / -1;
+  background-color: var(--bg-primary-alt);
+  color: var(--text-color);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: var(--footer-pane-height, 30vh);
+  transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  opacity: 1;
+}
+
+.footer-pane-container.collapsed {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  border-top: none;
+  padding-top: 0; // Ensure no padding when collapsed
+  padding-bottom: 0; // Ensure no padding when collapsed
+}
+
+.footer-pane-main-content {
+  padding: var(--space-md);
+  flex-grow: 1;
+  overflow-y: auto;
+
+  width: var(--footer-content-width, 100%);
+  margin: 0 auto;
+  position: relative;
+  max-width: 100%;
+  .resize-handle-vertical {
+    right: -3px;
+  }
+
+}
+
+.footer-resize-handle {
+  height: 6px;
+  cursor: row-resize;
+  background-color: var(--border-color);
+  flex-shrink: 0;
+
+}
+
+.footer-info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) var(--space-md);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--header-bg-color); 
+  flex-shrink: 0; 
+}
+
+.footer-info-left,
+.footer-info-center,
+.footer-info-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.footer-info-center {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.footer-info-left p,
+.footer-info-right span {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+/* Generic resize handles */
+.resize-handle-vertical {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+  z-index: 10;
+  background-color: var(--border-color);
+  flex-shrink: 0;
+}
+
+.resize-handle-horizontal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+  z-index: 10;
+}
+
+.app-version,
+.branch-name {
+  font-style: italic;
+  color: var(--text-color-light);
+}
+
+.App {
+  display: grid;
+  grid-template-rows: auto 1fr auto; 
+  grid-template-columns: var(--left-pane-width, var(--details-width)) 1fr var(--right-pane-width, var(--details-width)); 
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; 
+  position: relative;
+}
+
+
+
+

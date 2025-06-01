@@ -1,0 +1,134 @@
+/**
+ * @file _forms.scss
+ * @description Shared form styles for consistent form appearance across components.
+ * @dependencies base/_variables.scss
+ * @tested_by None // Assuming no specific tests for this yet
+ */
+@use '../../styles/base/variables' as *;
+
+.form-base {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  width: 100%;
+}
+
+.form-heading {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1); /* Consider var(--accent-color-rgb) */
+}
+
+.form-control:invalid {
+  border-color: var(--error-color);
+}
+
+.form-control:invalid:focus {
+  box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.1); /* Consider var(--error-color-rgb) */
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.form-actions--single {
+  justify-content: stretch;
+}
+
+.form-actions--split {
+  justify-content: flex-end;
+}
+
+/* Button styles that were part of shared-forms.css */
+/* These might be redundant if already covered by a global _buttons.scss */
+/* For now, including them as they were in the original block */
+.btn { /* This definition of .btn seems more specific or an override */
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-primary { /* This seems to override/differ from the earlier .btn-primary */
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: color-mix(in srgb, var(--accent-color) 85%, black);
+}
+
+.btn-primary:active {
+  background-color: color-mix(in srgb, var(--accent-color) 70%, black);
+}
+
+.btn-secondary { /* This seems to override/differ */
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--hover-bg);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Required field indicator */
+.required-field::after {
+  content: '*';
+  color: var(--error-color);
+  margin-left: var(--spacing-xs);
+}
+
+/* Error message styling */
+.error-message {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: var(--spacing-xs);
+}
+
+/* Responsive adjustments from shared-forms.css */
+@media (max-width: 480px) {
+  .form-base {
+    margin: var(--spacing-sm);
+    padding: var(--spacing-sm);
+  }
+} 

@@ -1,0 +1,54 @@
+/**
+ * @file _SearchPanel.scss
+ * @description Styles for the SearchPanel component.
+ * @dependencies None
+ * @tested_by None
+ */
+
+.search-panel {
+  min-height: 0;
+  height: 100%;
+  // Add styles for search panel if needed
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.search-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.search-results {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+
+  .search-item {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color-light);
+    display: flex;
+    justify-content: space-between;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover,
+    &.selected {
+      background-color: var(--bg-elevated-hover);
+    }
+  }
+
+  .search-item-name {
+    font-weight: 500;
+  }
+
+  .search-item-type {
+    font-size: 0.8em;
+    color: var(--text-muted);
+  }
+} 

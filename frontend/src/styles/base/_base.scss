@@ -1,0 +1,87 @@
+/**
+ * @file _base.scss
+ * @description Basic HTML element styling.
+ * @dependencies base/_variables.scss
+ * @tested_by None
+ */
+@use 'variables' as *;
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure body takes full viewport height */
+}
+
+main {
+  flex-grow: 1; /* Allows main content to expand and fill available space */
+  padding: var(--spacing-md);
+}
+
+/* Ensure app container takes full height */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Global link styles (already partially in _typography.scss, can be augmented here if needed) */
+a {
+  /* Example: remove tap highlight color on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
+img, svg, video, canvas, audio, iframe, embed, object {
+  display: block;
+  max-width: 100%;
+}
+
+/* Basic form element styling (can be expanded in a dedicated forms partial later) */
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--bg-input);
+  color: var(--text-input);
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--spacing-md);
+}
+
+thead {
+  background-color: var(--bg-table-header);
+}
+
+th, td {
+  text-align: left;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border-table);
+}
+
+tr:nth-child(even) {
+  background-color: var(--bg-table-row-alt);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: var(--spacing-lg) 0;
+} 

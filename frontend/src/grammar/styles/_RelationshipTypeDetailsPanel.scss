@@ -1,0 +1,27 @@
+/**
+ * @file _RelationshipTypeDetailsPanel.scss
+ * @description Styles for the RelationshipTypeDetailsPanel component.
+ * @dependencies ../../styles/base/_variables.scss
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.relationship-type-details {
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.relationship-type-details h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.relationship-type-details button {
+  align-self: flex-end;
+}
+
+// Add other component-specific styles here 

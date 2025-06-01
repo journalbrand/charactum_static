@@ -1,0 +1,16 @@
+/**
+ * @file _helpers.scss
+ * @description Helper utility classes.
+ * @dependencies base/_variables.scss
+ * @tested_by None
+ */
+@use '../base/variables' as *;
+
+.error {
+  color: var(--error-color);
+  padding: var(--spacing-md);
+  text-align: center;
+  background-color: var(--error-bg);
+  border-radius: var(--border-radius);
+  margin: var(--spacing-sm);
+} 

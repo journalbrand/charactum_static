@@ -1,0 +1,36 @@
+/**
+ * @file _AccordionSection.scss
+ * @description Styles for the AccordionSection component.
+ * @dependencies None
+ * @tested_by None
+ */
+
+.accordion-section {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-md);
+  background-color: var(--bg-secondary);
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  cursor: pointer;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.accordion-header:hover {
+  background-color: var(--bg-elevated);
+}
+
+.accordion-header span:last-child {
+  font-size: 1.2em;
+}
+
+.accordion-content {
+  padding: var(--spacing-md);
+  // scrollable class is applied directly in AccordionSection.tsx for content area
+} 

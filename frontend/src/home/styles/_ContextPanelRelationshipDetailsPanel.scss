@@ -1,0 +1,154 @@
+/**
+ * @file _RelationshipDetailsPanel.scss
+ * @description Styles for the RelationshipDetailsPanel component.
+ * @dependencies base/_variables.scss, components/_NodeDetailsPanel.scss (for shared patterns if any directly imported)
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+// No direct import from _NodeDetailsPanel.scss to keep them separate,
+// but they will share class names for common elements like .detail-row, .type-badge etc.
+// These common elements will be styled consistently as they are used in main.scss
+// or their styles are duplicated here for clarity if not relying on global cascades.
+
+.relationship-details-panel {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.relationship-details-header {
+  // The TSX has an empty header div, only containing the close button.
+  // If a title or other content is added, this section will need more styling.
+  display: flex;
+  justify-content: flex-end; // Pushes close button to the right
+  padding: var(--spacing-sm);
+  // border-bottom: 1px solid var(--border-color); // Optional: if header needs separator
+}
+
+.relationship-details-content {
+  padding: var(--spacing-md);
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+// Common styles also used by NodeDetailsPanel (ensure consistency or move to a common partial if they grow extensive)
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.detail-section h3 {
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) 1fr;
+  gap: var(--spacing-sm);
+  align-items: start;
+  padding: var(--spacing-sm);
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  min-height: 2.5rem;
+}
+
+.detail-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding-top: 2px;
+}
+
+.detail-value {
+  color: var(--text-primary);
+  text-align: right;
+  word-break: break-word;
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  &.id-text {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+  }
+}
+
+.type-badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--type-badge-text);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: capitalize;
+
+  // Relationship types might be different from node types, so use a generic approach
+  // or define specific relationship type badge variables if needed.
+  // For now, a default color and allow specific overrides via component class if necessary.
+  background-color: var(--accent-color); // Default badge color
+
+  // Example of specific relationship type styling if needed:
+  // &.connects { background-color: var(--some-connects-color); }
+  // &.contains { background-color: var(--some-contains-color); }
+}
+
+.relationship-actions {
+  margin-top: auto;
+  padding-top: var(--spacing-md);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  border-top: 1px solid var(--border-color);
+}
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error-color);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  margin: var(--spacing-md) 0;
+  border: 1px solid var(--error-color);
+}
+
+.close-button { // This class is present in RelationshipDetailsPanel.tsx
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem; // For the '×' character
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
+  width: 2rem;  // Fixed size for consistency
+  height: 2rem; // Fixed size for consistency
+  line-height: 1; // Ensure '×' is centered
+
+  &:hover {
+    color: var(--text-primary);
+    background-color: var(--hover-bg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .detail-row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+  }
+
+  .detail-value {
+    text-align: left;
+  }
+} 

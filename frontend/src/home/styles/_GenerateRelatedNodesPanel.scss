@@ -1,0 +1,136 @@
+/**
+ * @file _GenerateRelatedNodesPanel.scss
+ * @description Component-specific styles for GenerateRelatedNodesPanel, using theme classes.
+ * @dependencies base/_variables.scss, components/_forms.scss
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.generator-header {
+  margin: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.generator-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.context-info {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) 1fr;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  margin: 0;
+  background: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xs);
+}
+
+.context-node-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-sm);
+  align-items: baseline;
+}
+
+.context-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.context-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.context-type {
+  grid-column: 2;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.context-description {
+  grid-column: 1 / -1;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-top: var(--spacing-xs);
+}
+
+.generator-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: 0;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+}
+
+
+.direction-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.direction-options label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.direction-options input[type="radio"] {
+  margin: 0;
+}
+
+.direction-options span {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.candidates-pending {
+  padding: var(--spacing-md);
+  background: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  margin: 0 var(--spacing-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.candidates-pending p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .form-group,
+  .context-info,
+  .context-node-details {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xs);
+  }
+
+  .context-type {
+    grid-column: 1;
+  }
+}
+
+.generate-button {
+  margin: 0;
+  width: 100%;
+} 
+
+.generate-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

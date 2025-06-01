@@ -1,0 +1,17 @@
+/**
+ * @file _DatabaseControls.scss
+ * @description Styling for the database control buttons in the header.
+ * @dependencies base/_variables.scss, components/_buttons.scss (implicitly)
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.database-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.database-controls .btn {
+  text-decoration: none; /* Specific override for buttons used as links here */
+} 

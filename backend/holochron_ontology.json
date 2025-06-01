@@ -1,0 +1,434 @@
+{
+    "nodes": {
+      "episode": {
+        "label": "Episode",
+        "properties": ["id", "title", "synopsis", "episode_number", "season_number", "air_date"]
+      },
+      "act": {
+        "label": "Act",
+        "properties": ["id", "title", "sequence", "dramatic_purpose"]
+      },
+      "chapter": {
+        "label": "Chapter",
+        "properties": ["id", "title", "sequence", "description"]
+      },
+      "scene": {
+        "label": "Scene",
+        "properties": ["id", "title", "sequence", "synopsis", "script_pages", "mood"]
+      },
+      "event": {
+        "label": "Event",
+        "properties": ["id", "name", "description", "event_time", "significance"]
+      },
+      "place": {
+        "label": "Place",
+        "properties": ["id", "name", "description", "location_type", "region", "climate"]
+      },
+      "object": {
+        "label": "Object / Prop",
+        "properties": ["id", "name", "description", "object_type", "condition", "origin"]
+      },
+      "character": {
+        "label": "Character",
+        "properties": ["id", "name", "description", "age", "gender", "affiliation"]
+      },
+      "character_relationship": {
+        "label": "CharacterRelationship",
+        "properties": ["id", "relationship_type", "description", "start_state", "end_state"]
+      },
+      "trait": {
+        "label": "Trait",
+        "properties": ["id", "name", "description", "polarity"]
+      },
+      "archetype": {
+        "label": "Archetype",
+        "properties": ["id", "name", "description"]
+      },
+      "conflict": {
+        "label": "Conflict",
+        "properties": ["id", "name", "description", "conflict_type", "stakes"]
+      },
+      "plot": {
+        "label": "Plot",
+        "properties": ["id", "title", "description", "arc_type"]
+      },
+      "theme": {
+        "label": "Theme / Concept",
+        "properties": ["id", "name", "description", "motif"]
+      },
+      "state": {
+        "label": "State",
+        "properties": ["id", "name", "description", "effective_from", "effective_to"]
+      },
+      "group": {
+        "label": "Group / Faction",
+        "properties": ["id", "name", "description", "group_type", "ideology"]
+      },
+      "source_material": {
+        "label": "SourceMaterial",
+        "properties": ["id", "title", "medium", "creator", "publication_year"]
+      }
+    },
+  
+    "relationships": [
+
+      {
+        "name": "HAS_ACT",
+        "from": ["episode"],
+        "to": ["act"],
+        "required": false,
+        "description": "Episode is subdivided into Acts",
+        "prompt_if_source": "List the acts that make up {node_name}.",
+        "prompt_if_target": "Which episode contains {node_name}?"
+      },
+      {
+        "name": "HAS_CHAPTER",
+        "from": ["act"],
+        "to": ["chapter"],
+        "required": false,
+        "description": "Act is subdivided into Chapters",
+        "prompt_if_source": "List the chapters inside {node_name}.",
+        "prompt_if_target": "Which act does {node_name} belong to?"
+      },
+      {
+        "name": "HAS_SCENE",
+        "from": ["chapter"],
+        "to": ["scene"],
+        "required": false,
+        "description": "Chapter is subdivided into Scenes",
+        "prompt_if_source": "List the scenes contained within {node_name}.",
+        "prompt_if_target": "Which chapter includes {node_name}?"
+      },
+      {
+        "name": "CONTAINS_EVENT",
+        "from": ["scene"],
+        "to": ["event"],
+        "required": false,
+        "description": "Scene contains one or more Events",
+        "prompt_if_source": "What key events occur in {node_name}?",
+        "prompt_if_target": "In which scene does {node_name} take place?"
+      },
+  
+
+      {
+        "name": "PRECEDES",
+        "from": ["event"],
+        "to": ["event"],
+        "required": false,
+        "description": "Chronological ordering: this event happens before the target",
+        "prompt_if_source": "What events immediately follow {node_name}?",
+        "prompt_if_target": "What events immediately precede {node_name}?"
+      },
+  
+
+      {
+        "name": "FEATURES_CHARACTER",
+        "from": ["scene"],
+        "to": ["character"],
+        "required": false,
+        "description": "Characters appearing in a scene",
+        "prompt_if_source": "Which characters appear in {node_name}?",
+        "prompt_if_target": "In which scenes does {node_name} appear?"
+      },
+      {
+        "name": "PARTICIPATES_IN",
+        "from": ["character"],
+        "to": ["event"],
+        "required": false,
+        "description": "Character participates in an event",
+        "prompt_if_source": "Which events involve {node_name}?",
+        "prompt_if_target": "Which characters participate in {node_name}?"
+      },
+      {
+        "name": "MEMBER_OF",
+        "from": ["character"],
+        "to": ["group"],
+        "required": false,
+        "description": "Character belongs to a group or faction",
+        "prompt_if_source": "What groups or factions is {node_name} affiliated with?",
+        "prompt_if_target": "Which characters belong to {node_name}?"
+      },
+      {
+        "name": "CONTROLS_LOCATION",
+        "from": ["group"],
+        "to": ["place"],
+        "required": false,
+        "description": "Group currently controls or governs a place",
+        "prompt_if_source": "Which locations does {node_name} control?",
+        "prompt_if_target": "Which groups currently control {node_name}?"
+      },
+      {
+        "name": "POSSESSES_PROP",
+        "from": ["character"],
+        "to": ["object"],
+        "required": false,
+        "description": "A character currently possesses an object/prop",
+        "prompt_if_source": "What objects does {node_name} possess?",
+        "prompt_if_target": "Who currently possesses {node_name}?"
+      },
+  
+
+      {
+        "name": "HAS_TRAIT",
+        "from": ["character"],
+        "to": ["trait"],
+        "required": false,
+        "description": "Baseline trait of a character",
+        "prompt_if_source": "What traits define {node_name}?",
+        "prompt_if_target": "Which characters possess the trait {node_name}?"
+      },
+      {
+        "name": "ALTERS_TRAIT",
+        "from": ["event"],
+        "to": ["trait"],
+        "required": false,
+        "description": "Event changes the polarity or intensity of a trait",
+        "prompt_if_source": "Which traits are altered by {node_name}?",
+        "prompt_if_target": "Which events alter the trait {node_name}?"
+      },
+      {
+        "name": "ASSIGNED_ARCHETYPE",
+        "from": ["character"],
+        "to": ["archetype"],
+        "required": false,
+        "description": "Character embodies or has been cast into an archetypal role",
+        "prompt_if_source": "What archetypes best describe {node_name}?",
+        "prompt_if_target": "Which characters embody the archetype {node_name}?"
+      },
+      {
+        "name": "IN_STATE",
+        "from": ["character","object","place","conflict"],
+        "to": ["state"],
+        "required": false,
+        "description": "Current canonical state of an entity",
+        "prompt_if_source": "What is the current state of {node_name}?",
+        "prompt_if_target": "Which entities are currently in the state {node_name}?"
+      },
+      {
+        "name": "CHANGES_STATE",
+        "from": ["event"],
+        "to": ["state"],
+        "required": false,
+        "description": "Event results in a new state",
+        "prompt_if_source": "What states change because of {node_name}?",
+        "prompt_if_target": "Which events cause the state {node_name} to begin?"
+      },
+  
+
+      {
+        "name": "RELATIONSHIP_SUBJECT",
+        "from": ["character_relationship"],
+        "to": ["character"],
+        "required": true,
+        "description": "The originating (subject) character in a relationship edge",
+        "prompt_if_source": "Who is the initiator of {node_name}?",
+        "prompt_if_target": "List relationships where {node_name} is the subject/initiator."
+      },
+      {
+        "name": "RELATIONSHIP_OBJECT",
+        "from": ["character_relationship"],
+        "to": ["character"],
+        "required": true,
+        "description": "The target character of a relationship edge",
+        "prompt_if_source": "Who is the target of {node_name}?",
+        "prompt_if_target": "List relationships where {node_name} is the object/receiver."
+      },
+      {
+        "name": "EVOLVES_THROUGH",
+        "from": ["character_relationship"],
+        "to": ["event"],
+        "required": false,
+        "description": "Event where the relationship shifts (friends→rivals, etc.)",
+        "prompt_if_source": "What events changed the relationship {node_name}?",
+        "prompt_if_target": "Which relationships evolve during {node_name}?"
+      },
+  
+
+      {
+        "name": "INVOLVES_CHARACTER",
+        "from": ["conflict"],
+        "to": ["character"],
+        "required": false,
+        "description": "Characters participating in a conflict",
+        "prompt_if_source": "Which characters are involved in {node_name}?",
+        "prompt_if_target": "Which conflicts involve {node_name}?"
+      },
+      {
+        "name": "MANIFESTS_IN_SCENE",
+        "from": ["conflict"],
+        "to": ["scene"],
+        "required": false,
+        "description": "Scene where the conflict visibly surfaces",
+        "prompt_if_source": "In which scenes does {node_name} manifest?",
+        "prompt_if_target": "Which conflicts manifest in {node_name}?"
+      },
+      {
+        "name": "ESCALATES_INTO",
+        "from": ["conflict"],
+        "to": ["conflict"],
+        "required": false,
+        "description": "Smaller conflict grows into a larger one",
+        "prompt_if_source": "Into which bigger conflicts can {node_name} escalate?",
+        "prompt_if_target": "What prior conflicts escalate into {node_name}?"
+      },
+      {
+        "name": "SHIFTED_BY_EVENT",
+        "from": ["conflict"],
+        "to": ["event"],
+        "required": false,
+        "description": "Specific event that pivots the conflict",
+        "prompt_if_source": "Which events pivot or resolve {node_name}?",
+        "prompt_if_target": "Which conflicts are shifted by {node_name}?"
+      },
+  
+
+      {
+        "name": "EXPRESSES_THEME",
+        "from": ["conflict","plot","scene","event","character"],
+        "to": ["theme"],
+        "required": false,
+        "description": "Narrative element expresses or explores a theme",
+        "prompt_if_source": "Which themes does {node_name} explore?",
+        "prompt_if_target": "Which narrative elements express the theme {node_name}?"
+      },
+      {
+        "name": "PERSONIFIES_THEME",
+        "from": ["character"],
+        "to": ["theme"],
+        "required": false,
+        "description": "Character personifies an abstract idea",
+        "prompt_if_source": "Which themes does {node_name} personify?",
+        "prompt_if_target": "Which characters personify the theme {node_name}?"
+      },
+  
+
+      {
+        "name": "CENTRES_ON_CONFLICT",
+        "from": ["plot"],
+        "to": ["conflict"],
+        "required": false,
+        "description": "Plot’s defining central conflict",
+        "prompt_if_source": "What central conflict drives {node_name}?",
+        "prompt_if_target": "Which plot arcs centre on {node_name}?"
+      },
+      {
+        "name": "ADVANCES_VIA_EVENT",
+        "from": ["plot"],
+        "to": ["event"],
+        "required": false,
+        "description": "Key beats that push the plot forward",
+        "prompt_if_source": "Which events push {node_name} forward?",
+        "prompt_if_target": "Which plots are advanced by {node_name}?"
+      },
+  
+
+      {
+        "name": "REFERENCES_SOURCE",
+        "from": ["plot","episode","character"],
+        "to": ["source_material"],
+        "required": false,
+        "description": "Element adapted or inspired by earlier material",
+        "prompt_if_source": "Which source works inspire or underpin {node_name}?",
+        "prompt_if_target": "Which narrative elements cite or adapt {node_name}?"
+      },
+      {
+        "name": "ADAPTED_INTO",
+        "from": ["source_material"],
+        "to": ["episode","plot","character"],
+        "required": false,
+        "description": "Source material adapted into new narrative assets",
+        "prompt_if_source": "Which episodes, plots or characters adapt {node_name}?",
+        "prompt_if_target": "What original source inspired {node_name}?"
+      },
+  
+
+      {
+        "name": "CONTAINED_IN",
+        "from": ["place"],
+        "to": ["place"],
+        "required": false,
+        "description": "Spatial containment (room in building; moon in system)",
+        "prompt_if_source": "What larger location contains {node_name}?",
+        "prompt_if_target": "Which sub-locations are contained within {node_name}?"
+      },
+      {
+        "name": "VISITED_IN_EVENT",
+        "from": ["place"],
+        "to": ["event"],
+        "required": false,
+        "description": "Events that occur at a place",
+        "prompt_if_source": "Which events happen at {node_name}?",
+        "prompt_if_target": "Where does {node_name} take place?"
+      },
+  
+
+      {
+        "name": "FORGED_IN",
+        "from": ["object"],
+        "to": ["event"],
+        "required": false,
+        "description": "Creation event for an object/prop",
+        "prompt_if_source": "In which event was {node_name} created?",
+        "prompt_if_target": "Which objects are created during {node_name}?"
+      },
+      {
+        "name": "DESTROYED_IN",
+        "from": ["object"],
+        "to": ["event"],
+        "required": false,
+        "description": "Event where the object is destroyed or lost",
+        "prompt_if_source": "In which event is {node_name} destroyed or lost?",
+        "prompt_if_target": "Which objects are destroyed in {node_name}?"
+      },
+  
+
+      {
+        "name": "ALLIED_WITH",
+        "from": ["group"],
+        "to": ["group"],
+        "required": false,
+        "description": "Groups formally allied",
+        "prompt_if_source": "Which groups is {node_name} allied with?",
+        "prompt_if_target": "Which groups are allied with {node_name}?"
+      },
+      {
+        "name": "OPPOSES",
+        "from": ["group"],
+        "to": ["group"],
+        "required": false,
+        "description": "Groups in opposition or conflict",
+        "prompt_if_source": "Which groups does {node_name} oppose?",
+        "prompt_if_target": "Which groups oppose {node_name}?"
+      },
+      {
+        "name": "COMMANDED_BY",
+        "from": ["group"],
+        "to": ["character"],
+        "required": false,
+        "description": "Current leader of a faction",
+        "prompt_if_source": "Who currently commands {node_name}?",
+        "prompt_if_target": "Which groups are commanded by {node_name}?"
+      },
+  
+
+      {
+        "name": "NEXT_SCENE",
+        "from": ["scene"],
+        "to": ["scene"],
+        "required": false,
+        "description": "Simple linear ordering helper",
+        "prompt_if_source": "What scene follows {node_name}?",
+        "prompt_if_target": "What scene precedes {node_name}?"
+      },
+      {
+        "name": "PREVIOUS_EPISODE",
+        "from": ["episode"],
+        "to": ["episode"],
+        "required": false,
+        "description": "Season ordering helper",
+        "prompt_if_source": "What episode immediately precedes {node_name}?",
+        "prompt_if_target": "What episode immediately follows {node_name}?"
+      }
+    ]
+  }
+  

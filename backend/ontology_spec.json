@@ -1,0 +1,65 @@
+{
+  "nodes": {
+    "particular":   { "label": "Particular", "properties": ["id","name","description","type"] },
+    "universal":    { "label": "Universal",  "properties": ["id","name","description","type"] },
+    "dimension":    { "label": "Dimension",  "properties": ["id","name","description","type"] },
+    "state":        { "label": "State",      "properties": ["id","name","description","type"] }
+  },
+  "relationships": [
+    {
+      "name": "GENERALIZES",
+      "from": ["universal"],
+      "to": ["universal"],
+      "required": false,
+      "description": "A universal can generalize other universals",
+      "prompt_if_source": "I need a list of more specific categories that would fall under {node_name}. The description for {node_name} is :({node_description}).\nFor example, if we had \"mammals\", we might list specific types of mammals like \"primates\", \"rodents\", \"carnivores\", etc. I need a list of more specific categories that would fall under {node_name}.",
+      "prompt_if_target": "I need a list of broader categories that {node_name} would belong to. The description for {node_name} is {node_description} is ({node_description})\nFor example, if we had \"primates\", we might list broader categories like \"mammals\", \"vertebrates\", \"animals\", etc. I need a list of broader categories that {node_name} would belong to."
+    },
+    {
+      "name": "INSTANCE_OF",
+      "from": ["particular"],
+      "to": ["universal"],
+      "required": true,
+      "description": "A particular can be an instance of a universal",
+      "prompt_if_source": "I need a list of universals that {node_name} ({node_description}) is an instance of.\nFor example, if we had \"John's Toyota Camry\", we might list categories like \"Toyota Camry\", \"sedan\", \"car\".",
+      "prompt_if_target": "I need a list of specific instances that belong to the category {node_name} ({node_description}).\nFor example, if we had \"car\", we might list instances like \"John's Toyota Camry\", \"Mary's Tesla Model 3\", etc."
+    },
+    {
+      "name": "HAS_DIMENSION",
+      "from": ["universal","particular"],
+      "to": ["dimension"],
+      "required": false,
+      "description": "A universal or particular can have dimensions",
+      "prompt_if_source": "I need a list of measurable or observable aspects that {node_name} ({node_description}) could have.\nFor example, if we had \"car\", we might list dimensions like \"speed\", \"weight\", \"color\", etc.",
+      "prompt_if_target": "I need a list of things that could possess {node_name} ({node_description}) as a measurable aspect.\nFor example, if we had \"color\", we might list things like \"car\", \"house\", \"shirt\", etc."
+    },
+    {
+      "name": "ADMITS_VALUE",
+      "from": ["dimension"],
+      "to": ["state"],
+      "required": true,
+      "description": "A dimension can admit possible state values",
+      "prompt_if_source": "I need a list of possible values or states that {node_name} ({node_description}) could have.\nFor example, if we had \"color\", we might list states like \"red\", \"blue\", \"green\", etc.",
+      "prompt_if_target": "I need a list of dimensions that could admit {node_name} ({node_description}) as a value.\nFor example, if we had \"red\", we might list dimensions like \"color\", \"traffic signal\", etc."
+    },
+    {
+      "name": "VALUE_ADMITTED",
+      "from": ["universal","particular"],
+      "to": ["state"],
+      "required": false,
+      "description": "A universal or particular can limit or set its admitted state values",
+      "prompt_if_source": "I need a list of specific values that {node_name} ({node_description}) could admit under one of its dimensions.\nFor example, if we had \"temperature\", we might list states like \"cold\", \"warm\", \"hot\".",
+      "prompt_if_target": "I need a list of dimensions that could admit {node_name} ({node_description}) as a value.\nFor example, if we had \"hot\", we might list dimensions like \"temperature\", \"spiceness\", etc."
+    },
+    {
+      "name": "POTENTIALITY",
+      "from": ["state"],
+      "to": ["state"],
+      "required": false,
+      "description": "A state can transition to another state through an action",
+      "properties": ["action"],
+      "prompt_if_source": "I need a list of possible transitions that {node_name} ({node_description}) could undergo.\nFor example, if we had \"solid\", we might list transitions like \"melt\" (to liquid), or \"sublimate\" (to gas).",
+      "prompt_if_target": "I need a list of states that could transition into {node_name} ({node_description}).\nFor example, if we had \"liquid\", we might list transitions like \"freeze\" (from solid) or \"boil\" (from liquid to gas)."
+    }
+  ]
+} 

@@ -1,0 +1,129 @@
+/**
+ * @file _GrammarPage.scss
+ * @description Layout styles for the grammar editor page and its components.
+ * @dependencies base/_variables.scss, components/_forms.scss, components/_buttons.scss (implicitly)
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.grammar-page {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "nav right-content"; 
+  grid-template-columns: 250px 1fr; /* Nav panel width, right content takes rest. Adjust 250px as needed. */
+  grid-template-rows: auto 1fr; /* Header auto height, content row takes rest */
+  gap: var(--spacing-md);
+  padding: var(--spacing-md); /* Padding for the overall grammar page */
+  height: 100%; /* Fill the #root container */
+  width: 100%; /* Fill the #root container */
+  box-sizing: border-box;
+}
+
+.grammar-header { 
+  grid-area: header;
+  /* Assuming .panel class provides base styling like background, border, padding */
+}
+
+.grammar-nav-panel {
+  grid-area: nav;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); /* Space between nodes-panel and rels-panel */
+  overflow-y: auto; /* Scroll if nav content is too long */
+  /* Panels inside should have their own .panel styling for background/padding */
+}
+
+/* .nodes-panel and .rels-panel are children of grammar-nav-panel */
+/* They should have the .panel class for their individual styling */
+.nodes-panel, .rels-panel {
+  overflow-y: auto; /* Allow scrolling within these panels if their lists are long */
+  /* flex: 1; /* If you want them to share space equally within grammar-nav-panel, uncomment */
+}
+
+.right-column-wrapper {
+  grid-area: right-content;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); /* Space between details-panel and stats-panel */
+  overflow: hidden; /* This wrapper manages overflow for its children */
+  min-height: 0; /* Crucial for flex children to scroll correctly */
+}
+
+.details-panel-area {
+  /* This is a .panel */
+  flex: 1 1 60%; /* Takes more space initially, can grow/shrink */
+  overflow-y: auto;
+  min-height: 0; /* Allow scrolling */
+}
+
+.grammar-stats-panel {
+  /* This is a .panel (or should be styled like one) */
+  flex: 1 1 40%; /* Takes less space initially, can grow/shrink */
+  overflow-y: auto;
+  min-height: 0; /* Allow scrolling */
+  /* Make sure it has panel-like styling if its own class doesn't provide it */
+  /* e.g., background: var(--bg-secondary); border-radius: var(--border-radius); padding: var(--spacing-md); */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grammar-page {
+    grid-template-areas:
+      "header"
+      "nav"
+      "right-content"; 
+    grid-template-columns: 1fr; /* Single column */
+    grid-template-rows: auto auto 1fr; /* Header, Nav, then Right content takes rest */
+  }
+  .right-column-wrapper {
+    /* Flex direction column is already set, should stack fine */
+  }
+  .details-panel-area,
+  .grammar-stats-panel {
+    flex-basis: auto; /* Allow them to take natural height or be controlled by content on mobile */
+    /* You might want to give them min-heights if they collapse too much */
+  }
+}
+
+/* .node-type-details moved to _NodeTypeDetailsPanel.scss */
+
+/* .relationship-type-details moved to _RelationshipTypeDetailsPanel.scss */
+
+.branch-name {
+  margin-left: 0.5rem;
+  font-size: 0.85em;
+  color: var(--text-secondary);
+}
+
+/* Accordion, Search, Modal/Dialog styles are assumed to be globally available 
+   or imported by their respective components if used within GrammarPage. 
+   Removing them from here to avoid duplication. */
+
+/* AI suggestion preview */
+.ai-suggestion-preview {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.ai-suggestion-preview pre {
+  white-space: pre-wrap;
+  background: var(--bg-primary);
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius);
+  max-height: 200px;
+  overflow: auto;
+}
+
+.unsaved {
+  color: var(--error-color);
+  margin-left: var(--spacing-sm);
+  font-size: 0.8rem;
+}
+
+/* Search panel styles moved or covered by global/component-specific imports */
+
+/* Confirmation dialog styles moved or covered by global/component-specific imports */ 

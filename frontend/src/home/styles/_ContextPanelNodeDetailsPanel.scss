@@ -1,0 +1,207 @@
+/**
+ * @file _NodeDetailsPanel.scss
+ * @description Styles for the NodeDetailsPanel component.
+ * @dependencies base/_variables.scss
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.node-details-panel {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  overflow: hidden; // To contain box-shadow or other effects if added
+  height: 100%; // Make it fill its container in edit-pane
+  display: flex; // Allow content to flex and scroll
+  flex-direction: column;
+}
+
+.node-details-content {
+  padding: var(--spacing-md);
+  overflow-y: auto; // Allows content to scroll if it overflows
+  flex-grow: 1; // Allows content to take available space
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); // Spacing between sections
+}
+
+// No specific .node-header or .node-title in the new TSX
+// .node-type and .node-description are now handled by generic .detail-row
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.detail-section h3 { // For potential future section headers like "Schema Metadata"
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0; // Add some bottom margin
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) 1fr; // Label column, Value column
+  gap: var(--spacing-sm);
+  align-items: start; // Align items to the start of their grid cell
+  padding: var(--spacing-sm);
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  min-height: 2.5rem; // Ensure a decent minimum touch target / visual height
+}
+
+.detail-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding-top: 2px; // Minor adjustment to align with value if needed
+}
+
+.detail-value {
+  color: var(--text-primary);
+  text-align: right; // Default alignment
+  word-break: break-word; // Prevent long words from breaking layout
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  &.id-text {
+    font-family: var(--font-mono);
+    color: var(--text-secondary); // Consistent with old .id-text
+  }
+
+  // Specific handling for description which is in a span, not a dedicated class
+  .detail-row.description & {
+    text-align: left;
+    white-space: pre-wrap; // Preserve whitespace and newlines
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-sizing: border-box;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px var(--accent-color-translucent);
+    }
+  }
+
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+}
+
+.type-badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--type-badge-text);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: capitalize; // Make types like 'universal' look like 'Universal'
+
+  // Dynamically set background based on class
+  &.particular { background-color: var(--type-badge-particular-bg); }
+  &.universal { background-color: var(--type-badge-universal-bg); }
+  &.dimension { background-color: var(--type-badge-dimension-bg); }
+  &.state { background-color: var(--type-badge-state-bg); }
+  // Add a fallback for unknown types
+  &:not(.particular):not(.universal):not(.dimension):not(.state) {
+    background-color: var(--text-muted); // Fallback color
+  }
+}
+
+.ai-instructions {
+  margin: var(--spacing-md) 0;
+  textarea {
+    width: 100%;
+    min-height: 60px;
+    resize: vertical;
+    padding: var(--spacing-sm);
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 0.9rem;
+  }
+}
+
+.ai-suggestion-preview {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+
+  p {
+    margin-top: 0;
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+  pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    background-color: var(--bg-primary);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .btn { // Spacing for accept/discard buttons
+    margin-right: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+  }
+}
+
+.node-actions {
+  margin-top: auto; // Pushes actions to the bottom of the flex container
+  padding-top: var(--spacing-md); // Add some space above the buttons
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm); // Spacing between buttons
+  border-top: 1px solid var(--border-color); // Separator line
+}
+
+.unsaved {
+  font-size: 0.8rem;
+  color: var(--error-color);
+  align-self: center;
+  margin-right: auto; // Push to the left
+}
+
+.error-message {
+  background-color: var(--error-bg);
+  color: var(--error-color);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  margin: var(--spacing-md) 0; // Standard margin top/bottom
+  border: 1px solid var(--error-color);
+}
+
+// No .close-button in NodeDetailsPanel.tsx currently. If added, it would be styled here or globally.
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .detail-row {
+    grid-template-columns: 1fr; // Stack label and value
+    gap: var(--spacing-xs);
+  }
+
+  .detail-value {
+    text-align: left; // Align value to left when stacked
+  }
+} 

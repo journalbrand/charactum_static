@@ -1,0 +1,473 @@
+/**
+ * @file _CandidateAnalysisPanel.scss
+ * @description Styles for the CandidateAnalysisPanel component.
+ * @dependencies base/_variables.scss
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+.candidate-stats-panel {
+  // Maintain a consistent layout height regardless of the footer size. The
+  // pane will scroll within the footer if there isn't enough room.
+  min-height: 700px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+
+  h3 {
+    margin: 0;
+    padding: var(--spacing-md); // Use md for panel headers
+    color: var(--text-primary);
+    font-size: 1.1rem; // Slightly larger for main panel title
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-elevated);
+  }
+}
+
+.stats-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); // Increased gap for better separation of sections
+  padding: var(--spacing-md);
+  flex-grow: 1; // Allow content to take available space
+  overflow: auto; // Allow scrolling for the entire content area if it overflows
+}
+
+/* Visualization Row */
+.visualization-container {
+  display: flex;
+  gap: var(--spacing-md);
+  // min-height: 300px; // Let content define height, or use a variable
+  // max-height: 300px; // Plotly will define its own height
+}
+
+.plot-container {
+  flex: 1;
+  background: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm);
+  display: flex; // Keep flex for alignment
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; // Important for Plotly charts
+
+  &.cluster-display {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: stretch; // Make slider and plot fill height
+  }
+
+  .cluster-slider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; // Center slider vertically if space allows
+    // The MUI slider itself will define its height based on sx prop in TSX
+    // Typography component will be styled by MUI or global typography
+  }
+
+  .plot-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    width: 100%; // Ensure it takes full width of its container
+    height: 100%; // Ensure it takes full height
+    > div { // Target Plotly plot divs
+      min-height: 0; // Allow plots to shrink if needed in flex col
+      flex: 1; // Distribute space if multiple plots are stacked
+    }
+  }
+}
+
+// Statistics are now part of candidates distribution in the TSX
+// However, the old .statistics-list style is still used inside renderStatistics()
+.statistics-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  padding: 0;
+  margin: var(--spacing-sm) 0; // Add some margin if used standalone
+  list-style: none;
+}
+
+.statistics-item {
+  flex: 1 1 auto; // Allow flex grow, shrink, with auto basis
+  min-width: 120px; // Slightly wider min-width
+  background: var(--bg-primary); // Use primary, not secondary, for contrast
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.85rem;
+}
+
+.statistics-label {
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-size: 0.8rem;
+  text-transform: capitalize; // Make keys like 'std' look better
+}
+
+.statistics-value {
+  color: var(--accent-color);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Candidates Section & Distribution */
+.candidates-panel { // New outer container from TSX
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1; // Allow this section to grow and fill remaining space
+  min-height: 0; // Crucial for flex children to scroll correctly
+}
+
+.candidates-container { // This is for the distribution plot section
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-md);
+  overflow: hidden; // Keep overflow hidden for child layout
+
+  h4 {
+    margin: 0 0 var(--spacing-md) 0; // More bottom margin for section title
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+.order-toggle {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  align-self: flex-start; // Align to the left
+  .btn {
+    padding: var(--spacing-xs) var(--spacing-sm); // Smaller buttons for toggle
+  }
+}
+
+.candidates-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  // Removed background/border as these are now on .candidates-container
+}
+
+.distribution-axis {
+  position: absolute; // Position relative to .distribution-plot
+  left: -35px; // Adjust to not overlap with scale markers
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg) ;
+  transform-origin: center center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.distribution-scale {
+  position: relative;
+  height: 30px;
+  margin: 0 var(--spacing-xl) var(--spacing-sm) var(--spacing-xl); // xl to give space for axis label
+  border-bottom: 1px solid var(--border-color);
+}
+
+.scale-marker {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  bottom: 8px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    height: 6px;
+    width: 1px;
+    background: var(--border-color);
+  }
+}
+
+.distribution-plot {
+  position: relative;
+  min-height: 120px; // Ensure it has some height for cells
+  margin: var(--spacing-sm) var(--spacing-xl) 0 var(--spacing-xl); // Match scale margin, add top margin for labels
+  padding-top: var(--spacing-lg); // Space for region labels
+}
+
+.distribution-regions {
+  position: absolute;
+  top: 0; // Position at the very top of .distribution-plot
+  left: 0;
+  right: 0;
+  height: 3px; // Visual height of the line itself is not critical
+  display: flex;
+}
+
+.region-indicator {
+  position: absolute;
+  height: 100%;
+  border-left: 1px dashed var(--text-muted); // Use muted for less emphasis
+
+  &::after {
+    content: attr(data-label);
+    position: absolute;
+    top: -20px; // Position label above the plot area
+    left: 4px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  // Positions based on old CSS for 3 regions (Strong, Medium, Weak)
+  // Strong: 0-25%, Medium: 25-50%, Weak: 50-100% (based on old bg colors)
+  // The JS seems to define these regions, this is just visual aid
+  &.strong { left: 25%; } // Example: marks end of strong region
+  &.medium { left: 50%; } // Example: marks end of medium region
+  // No weak indicator needed if it's the rest of the area
+}
+
+.region-background {
+  position: absolute;
+  top: var(--spacing-lg); // Align with where cells start (below labels)
+  bottom: 0;
+  height: auto; // Let it fill space down to bottom of plot area
+  opacity: 0.05;
+
+  &.strong {
+    left: 0;
+    width: 25%; // Example width
+    background: var(--success-color);
+  }
+  &.medium {
+    left: 25%;
+    width: 25%; // Example width
+    background: var(--warning-color);
+  }
+  &.weak {
+    left: 50%;
+    width: 50%; // Example width
+    background: var(--error-color);
+  }
+}
+
+.box-plot {
+  position: relative; // Relative to .distribution-plot
+  height: 20px;
+  // background: var(--bg-secondary); // Not needed if plot bg is elevated
+  border-radius: var(--border-radius);
+  margin: var(--spacing-md) 0; // Space around the box plot line
+}
+
+.box {
+  position: absolute;
+  height: 100%;
+  background: var(--accent-color);
+  opacity: 0.2;
+  border-radius: var(--border-radius-sm, 4px); // Use smaller radius for this element
+}
+
+.median-line {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: var(--accent-color);
+}
+
+.whisker {
+  position: absolute;
+  top: 50%; // Center vertically
+  height: 1px;
+  background: var(--accent-color);
+  opacity: 0.5;
+
+  // Whiskers typically have caps, let's simplify or ensure TSX draws them
+  // The old CSS for ::before/::after created caps, this might be handled by Plotly or needs JS
+}
+
+.candidates-cells {
+  position: relative;
+  height: 80px; // Height for the cells to be distributed within
+  margin-top: var(--spacing-md);
+}
+
+.candidate-cell {
+  position: absolute;
+  bottom: 50%; // Align to vertical center of its track
+  transform: translate(-50%, 50%); // Center on its `left` position and track
+  width: 20px; // Slightly smaller for dense display
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--candidate-color, var(--accent-color)); // Use CSS var set in TSX
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background-color: var(--bg-secondary);
+  will-change: transform, z-index; // Optimize animation
+  display: flex; // For centering content if any (like a checkmark)
+  align-items: center;
+  justify-content: center;
+
+  &.selected {
+    background-color: var(--candidate-color, var(--accent-color));
+    // Add a stronger border or inner element for selected state if pure bg is not enough
+    &::after { // Example: inner dot for selected
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: white; // Or a contrasting color
+    }
+  }
+
+  &:hover:not(.is-hovered) { // Subtle hover for non-active cells
+     background: color-mix(in srgb, var(--candidate-color, var(--accent-color)) 20%, transparent);
+  }
+
+  // .is-hovered is applied by JS, which also handles transform: scale()
+  // z-index is also handled by JS (handleCellMouseEnter/Leave)
+
+  .candidate-checkbox { // The actual input is hidden but label makes cell clickable
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1; // Ensure it's clickable over other cell content
+  }
+
+  .cell-content { // Wrapper for label behavior
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; // Ensure label click area matches circle
+  }
+
+  // Name is now part of the tooltip in the TSX for cells
+  // .cell-name (rotated text) is not in the current TSX structure for cells
+
+  .cell-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px); // Position above the cell
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 180px;
+    max-width: 250px;
+    padding: var(--spacing-sm);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast), transform var(--transition-fast);
+    z-index: var(--z-tooltip);
+    pointer-events: none;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--text-primary);
+  }
+
+  .cell-content:hover ~ .cell-tooltip, // Show tooltip on hover of the label
+  &.is-hovered .cell-tooltip { // Also show if JS marks it as primary hovered cell
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-4px); // Slight upward movement
+  }
+}
+
+
+.relationship-context { // Styling for the relationship context info box
+  padding: var(--spacing-md);
+  background: var(--bg-elevated);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  margin-top: var(--spacing-md);
+  h4 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md); // More padding for action bar
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-elevated);
+  margin-top: auto; // Push to bottom if .stats-content is flex-column
+
+  // Selects direct button children, or buttons with .btn class
+  > button,
+  > .btn {
+    flex: 1; // Make buttons share space
+    // General .btn styles from main.scss will apply for padding, font-size etc.
+  }
+  // No need to redefine .btn-primary, .btn-secondary, or disabled styles here if using global .btn classes
+}
+
+/* Loading and Error States (already have .error, this is .loading) */
+.loading { // Assuming this class might be used on a wrapper
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  flex-grow: 1; // Take available space if it's the only content
+}
+
+.error { // From global styles, ensure it matches if overridden here
+  padding: var(--spacing-md);
+  // margin: var(--spacing-md) 0; // Margin already applied by .stats-content gap
+  background: var(--error-bg);
+  color: var(--error-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--error-color);
+}
+
+// Material UI Slider is styled via `sx` prop in TSX.
+// Plotly plots are styled via layout options in TSX.
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .visualization-container {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .statistics-section {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .candidates-container {
+    grid-column: 1;
+    grid-row: 3;
+  }
+} 

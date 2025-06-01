@@ -1,0 +1,143 @@
+/**
+ * @file _variables.scss
+ * @description Global theme variables and color scheme definitions.
+ *              This file contains all CSS custom properties (variables)
+ *              for light and dark themes.
+ * @dependencies None
+ * @tested_by None
+ */
+
+// Light theme variables (default)
+:root {
+  /* Layout dimensions */
+  --header-height: min(15vh, 120px); // Height of the main application header
+  --details-width: clamp(400px, 30vw, 600px); // Width of side panels (create/details)
+  --min-graph-height: min(60vh, 400px); // Minimum height for the graph visualization area
+
+  /* Spacing */
+  --spacing-xs: 4px;   // Extra small spacing unit
+  --spacing-sm: 8px;   // Small spacing unit
+  --spacing-md: 16px;  // Medium spacing unit
+  --spacing-lg: 24px;  // Large spacing unit
+  --spacing-xl: 32px;  // Extra large spacing unit
+
+  /* Colors */
+  --bg-primary: #f5f5f5;             // Primary background color for the application
+  --bg-secondary: #ffffff;           // Secondary background, often for cards/panels
+  --bg-elevated: #fafafa;            // Background for elements that appear elevated
+  --bg-graph: #ffffff;               // Background color specifically for the graph area
+  --text-primary: #333333;           // Primary text color
+  --text-secondary: #666666;         // Secondary text color, for less emphasis
+  --text-muted: #888888;             // Muted text color, for hints or disabled text
+  --accent-color: #2196F3;           // Main accent color for interactive elements
+  --accent-color-rgb: 33, 150, 243;  // RGB version of accent color for use with opacity
+  --error-color: #d32f2f;            // Color for error messages and indicators
+  --error-bg: #ffebee;               // Background color for error message containers
+  --border-color: #e0e0e0;           // Default border color for elements
+  --shadow-color: rgba(0, 0, 0, 0.1); // Base color for shadows
+  --shadow-xs: 0 1px 1px var(--shadow-color);    // Extra small shadow
+  --shadow-sm: 0 1px 2px var(--shadow-color);    // Small shadow
+  --shadow-md: 0 2px 4px var(--shadow-color);    // Medium shadow
+  --hover-bg: #eeeeee;               // Background color for hover states on interactive elements
+
+  /* Node colors */
+  --node-particular: #ff7f0e;       // Color for 'Particular' type nodes
+  --node-universal: #1f77b4;        // Color for 'Universal' type nodes
+  --node-dimension: #2ca02c;        // Color for 'Dimension' type nodes
+  --node-state: #d62728;            // Color for 'State' type nodes
+  --node-stroke: #ffffff;            // Stroke color for nodes
+  --node-hover-stroke: #000000;     // Stroke color for nodes on hover
+  --node-text: #ffffff;              // Text color for node labels (if inside the node)
+
+  /* Graph Elements */
+  --link-color: #666666;             // Default color for links/edges in the graph
+  --link-hover: #333333;             // Color for links/edges on hover
+  --grid-color: rgba(153, 153, 153, 0.1); // Color for the graph background grid lines
+
+  /* Border radius */
+  --border-radius: 8px;              // Standard border radius for UI elements
+  --border-radius-lg: 12px;            // Larger border radius for specific elements
+
+  /* Transitions */
+  --transition-fast: 150ms ease;     // Fast transition timing
+  --transition-normal: 250ms ease;   // Normal transition timing
+  --transition-slow: 350ms ease;     // Slow transition timing
+
+  /* Z-index layers */
+  --z-header: 100;                   // Z-index for the main header
+  --z-overlay: 200;                  // Z-index for overlays (e.g., context menus)
+  --z-modal: 300;                    // Z-index for modals
+  --z-tooltip: 400;                  // Z-index for tooltips
+  --z-index-fixed: 500;              // Z-index for fixed elements like floating buttons
+
+  /* Button Colors */
+  --btn-primary-bg: var(--accent-color);                      // Primary button background
+  --btn-primary-text: white;                                  // Primary button text color
+  --btn-primary-hover: color-mix(in srgb, var(--accent-color) 85%, black); // Primary button hover background
+  --btn-primary-active: color-mix(in srgb, var(--accent-color) 70%, black); // Primary button active background
+
+  --btn-secondary-bg: var(--bg-elevated);                     // Secondary button background
+  --btn-secondary-text: var(--text-primary);                  // Secondary button text color
+  --btn-secondary-hover: color-mix(in srgb, var(--bg-elevated) 85%, black); // Secondary button hover background
+  --btn-secondary-active: color-mix(in srgb, var(--bg-elevated) 70%, black); // Secondary button active background
+
+  --btn-danger-bg: var(--error-color);                        // Danger button background
+  --btn-danger-text: white;                                   // Danger button text color
+  --btn-danger-hover: color-mix(in srgb, var(--error-color) 85%, black);   // Danger button hover background
+  --btn-danger-active: color-mix(in srgb, var(--error-color) 70%, black);  // Danger button active background
+
+  /* Typography */
+  --font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; // Monospaced font stack
+
+  /* Input Fields */
+  --bg-input: var(--bg-primary); // Default input background
+  --accent-color-translucent: rgba(var(--accent-color-rgb), 0.25); // Translucent accent for focus rings etc.
+
+  /* Type Badges (derived from node colors for consistency) */
+  --type-badge-particular-bg: var(--node-particular);
+  --type-badge-universal-bg: var(--node-universal);
+  --type-badge-dimension-bg: var(--node-dimension);
+  --type-badge-state-bg: var(--node-state);
+  --type-badge-text: var(--node-text); // Text color for badges, typically light for dark backgrounds
+
+  /* Semantic Colors */
+  --success-color: #2e7d32; // Green for success states
+  --warning-color: #ed6c02; // Orange for warning states
+}
+
+// Dark mode theme overrides
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1a1a1a;             // Primary background - dark
+    --bg-secondary: #2d2d2d;           // Secondary background - dark
+    --bg-elevated: #333333;            // Elevated background - dark
+    --bg-graph: #1a1a1a;               // Graph background - dark
+    --text-primary: #ffffff;           // Primary text - dark
+    --text-secondary: #cccccc;         // Secondary text - dark
+    --text-muted: #999999;             // Muted text - dark
+    --border-color: #444444;           // Border color - dark
+    --shadow-color: rgba(0, 0, 0, 0.3); // Shadow color - dark
+    --accent-color: #64b5f6;           // Accent color - dark (often lighter for contrast)
+    --hover-bg: #404040;               // Hover background - dark
+
+    /* Node Colors - Dark Theme */
+    --node-particular: #ff9f4d;       // Particular node - dark
+    --node-universal: #4da6ff;        // Universal node - dark
+    --node-dimension: #4dff4d;        // Dimension node - dark
+    --node-state: #ff4d4d;            // State node - dark
+    --node-stroke: #333333;            // Node stroke - dark
+    --node-hover-stroke: #ffffff;     // Node hover stroke - dark
+    
+    /* Input Fields - Dark Theme */
+    --bg-input: var(--bg-secondary); // Darker input background for dark mode
+
+    /* Graph Elements - Dark Theme */
+    --link-color: rgba(204, 204, 204, 0.4); // Link color - dark
+    --grid-color: rgba(255, 255, 255, 0.05); // Graph grid - dark
+
+    /* Semantic Colors - Dark Theme */
+    --success-color: #66bb6a; // Lighter green for dark mode
+    --warning-color: #ffa726; // Lighter orange for dark mode
+  }
+} 

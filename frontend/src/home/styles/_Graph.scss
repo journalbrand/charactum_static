@@ -1,0 +1,151 @@
+/**
+ * @file _Graph.scss
+ * @description Styles for the Graph visualization component.
+ * @dependencies base/_variables.scss
+ * @tested_by None
+ */
+@use '../../styles/base/variables' as *;
+
+/* Styles for the Graph component will be added here if any are identified. */
+.graph-container {
+  width: 100%;
+  height: 100%;
+  min-height: var(--min-graph-height);
+  // Old .graph had these, they are now on .graph-area in _main-layout.scss
+  // background-color: var(--bg-secondary);
+  // border-radius: var(--border-radius);
+  // overflow: hidden;
+  // position: relative;
+}
+
+/* Graph SVG */
+.graph-container svg {
+  width: 100% !important; // Important might be due to D3 inline styles
+  height: 100% !important; // Important might be due to D3 inline styles
+  display: block;
+  position: absolute; // Ensures it fills the container if container is relative/absolute
+  top: 0;
+  left: 0;
+}
+
+.node {
+  cursor: pointer;
+  transition: all var(--transition-fast); // Keep transition from current
+  transform-origin: center; // Keep from current
+  transform-box: fill-box; // Keep from current
+}
+
+.node circle {
+  fill: var(--node-color, var(--accent-color)); // Use var set by D3, with fallback
+  stroke: var(--node-stroke);
+  stroke-width: 2px; // From old CSS
+  transition: all var(--transition-fast); // From old CSS
+  transform-origin: center; // Keep from current
+}
+
+.node:hover circle {
+  stroke: var(--node-hover-stroke);
+  stroke-width: 3px; // From old CSS
+  filter: brightness(1.1) scale(1.1); // From old CSS
+}
+
+.node.frozen circle {
+  stroke-dasharray: 4; // From old CSS
+  // stroke-width: 2.5px; // Removed, inherit from .node circle
+}
+
+.node.selected circle {
+  stroke: var(--accent-color); // Or a specific selection color variable
+  stroke-width: 3px; // Keep from current
+}
+
+/* Node text styling */
+.node text.node-label, // Targeting text element with class for specificity
+.node-label { // General class if D3 applies it directly to text without 'text' tag
+  fill: var(--text-primary);
+  font-family: var(--font-family-base); // Using base font family
+  font-size: var(--font-size-xs);
+  pointer-events: none;
+  user-select: none; // Added for completeness
+  paint-order: stroke fill;
+  stroke: var(--bg-primary); // For text background effect
+  stroke-width: 3px;      // For text background effect
+  stroke-linecap: round;    // For text background effect
+  stroke-linejoin: round;   // For text background effect
+}
+
+/* Link styling */
+.link { // Class applied by D3 to the path element
+  stroke: var(--link-color);
+  stroke-opacity: 0.6;
+  stroke-width: 2px; // From old CSS
+  fill: none; // From old CSS
+  transition: all var(--transition-fast); // From old CSS
+  pointer-events: none; // From old CSS, important for hitboxes
+}
+
+/* Hit detection path */
+.link-hitbox {
+  stroke: transparent;
+  stroke-width: 20px; /* From old CSS (10px on each side) */
+  fill: none;
+  cursor: pointer; // From old CSS
+  pointer-events: stroke; // Keep from current, good for hitboxes
+}
+
+/* Link label styling */
+.link-label {
+  fill: var(--text-secondary);
+  font-family: var(--font-family-base); // Using base font family
+  font-size: var(--font-size-xs);
+  pointer-events: none;
+  user-select: none;
+  paint-order: stroke fill;
+  stroke: var(--bg-primary); // For text background effect
+  stroke-width: 2px;      // For text background effect
+  stroke-linecap: round;    // For text background effect
+  stroke-linejoin: round;   // For text background effect
+}
+
+/* Hover effects for links within a link group */
+.link-group:hover .link { // Target .link (actual path)
+  stroke: var(--link-hover);
+  stroke-opacity: 1;
+  stroke-width: 3px;
+}
+
+.link-group:hover .link-label {
+  fill: var(--text-primary);
+}
+
+/* Arrow marker styling - D3 applies fill directly, this class is for other potential marker styles */
+.arrow-marker {
+  // fill: var(--link-color); // D3 sets this via .attr("fill"), so not strictly needed here
+}
+
+.zoom-group {
+  width: 100%;
+  height: 100%;
+}
+
+/* Context menu styling */
+.context-menu {
+  position: fixed; // From old CSS
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xs) 0;
+  box-shadow: 0 2px 5px var(--shadow-color);
+  z-index: var(--z-overlay); // Use variable, old was --z-index-fixed
+}
+
+.context-menu-item {
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background-color var(--transition-fast);
+}
+
+.context-menu-item:hover {
+  background-color: var(--hover-bg);
+} 
