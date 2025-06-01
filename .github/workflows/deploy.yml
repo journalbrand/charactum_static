@@ -1,0 +1,149 @@
+name: Deploy to EC2
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag or SHA'
+        default: ''
+        required: false
+  push:
+    branches: [ main ]
+
+env:
+  HOST: ${{ secrets.EC2_HOST }}
+  USER: ${{ secrets.EC2_USERNAME }}
+  DEPLOY_BRANCH: ${{ vars.DEPLOY_BRANCH }}   # ← new
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # manual-input ref (if supplied) ⟶ otherwise the DEPLOY_BRANCH variable
+          ref: ${{ github.event.inputs.ref || env.DEPLOY_BRANCH }}
+
+      # Enable automatic ~/.npm cache for fast npm install
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      # Cache pip wheels for fast Python installs
+      - name: Cache pip wheels
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Build React frontend
+        env:
+          VITE_BRANCH: ${{ github.event.inputs.ref || env.DEPLOY_BRANCH }}
+        run: |
+          cd frontend
+          npm install --omit=optional --no-audit --no-fund
+          # Work-around for npm optional-deps bug (rollup native binary)
+          npm install --ignore-scripts --no-save @rollup/rollup-linux-x64-gnu
+          npx vite build
+          cd ..
+
+      - name: Create bundle
+        run: |
+          # Create an uncompressed tarball with backend and requirements
+          tar -cf deploy.tar \
+            --exclude='frontend' \
+            backend requirements.txt
+          # Append frontend build to the uncompressed tarball
+          tar --append --file=deploy.tar -C frontend/dist .
+          # Compress the final tarball
+          gzip deploy.tar
+
+      - name: Copy bundle to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host:   ${{ env.HOST }}
+          username: ${{ env.USER }}
+          key:    ${{ secrets.EC2_SSH_KEY }}
+          source: deploy.tar.gz
+          target: /tmp/
+
+      - name: Unpack + restart backend
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host:   ${{ env.HOST }}
+          username: ${{ env.USER }}
+          key:    ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -euo pipefail
+
+            ############################################################
+            # 0) Stop any running instance *before* we wipe the tree
+            ############################################################
+            echo "--- Stopping existing backend process (if any) ---"
+            sudo fuser -k 5002/tcp || echo "Nothing listening on 5002 (expected on first deploy)."
+
+            ############################################################
+            # 1) NUKE-AND-PAVE  (the "purge block")
+            ############################################################
+            echo "--- Purging old release ---"
+            sudo rm -rf /srv/ontorum
+            # Recreate a minimal directory tree for the new build
+            sudo mkdir -p /srv/ontorum/backend /srv/ontorum/logs
+            # (ownership will be corrected later)
+
+            ############################################################
+            # 2) Unpack new build
+            ############################################################
+            echo "--- Unpacking deployment bundle ---"
+            sudo tar -xzf /tmp/deploy.tar.gz -C /srv/ontorum
+
+            ############################################################
+            # 3) Fix permissions on everything we just created/extracted
+            ############################################################
+            echo "--- Setting directory ownership ---"
+            sudo chown -R ubuntu:ubuntu /srv/ontorum
+
+            ############################################################
+            # 4) Re-create/update .env (unchanged from before)
+            ############################################################
+            sudo tee /srv/ontorum/backend/.env >/dev/null <<EOF
+            NEO4J_URI=bolt://localhost:7687
+            NEO4J_USER=neo4j
+            NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }}
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            EOF
+            sudo chown ubuntu:ubuntu /srv/ontorum/backend/.env
+
+            ############################################################
+            # 5) Fresh virtual-env install   (starts from scratch each time)
+            ############################################################
+            echo "--- Setting up Python virtual environment ---"
+            sudo -H -u ubuntu bash -c '
+              set -euo pipefail
+              cd /srv/ontorum/backend
+              python3 -m venv venv          # always new
+              source venv/bin/activate
+              pip install -r /srv/ontorum/requirements.txt
+            '
+
+            ############################################################
+            # 6) Launch the backend (unchanged)
+            ############################################################
+            echo "--- Starting new backend process ---"
+            sudo -H -u ubuntu bash -c '
+              set -euo pipefail
+              cd /srv/ontorum
+              source /srv/ontorum/backend/venv/bin/activate
+              STATIC_FILES_DIR=/srv/ontorum nohup python3 -m uvicorn backend.api:app \
+                --host 0.0.0.0 --port 5002 --env-file /srv/ontorum/backend/.env \
+                > /srv/ontorum/logs/backend.log 2>&1 &
+            '
+
+            ############################################################
+            # 7) Quick health check (unchanged)
+            ############################################################
+            echo "--- Verifying backend ---"
+            sleep 5
+            sudo ss -tulnp | grep ':5002' && echo "✅ Backend is up."

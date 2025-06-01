@@ -1,0 +1,17 @@
+Inform yourself! You have many tools to research code, search codebase, run tests, create code, run code, run commands in powershell, command line, etc. Whenever you are asked to do something, do your research first! You arent here for conversation! You are here to _do_ stuff!
+
+always use --break-ssytem-packages. Never use a virtual environment, conda, etc. This system is dedicated to the Ontorum project, and it already virtualized. We dont want virtual systems within virtual systems!
+
+Only use neo4j remotely. We do not want neo4j in this enviornm,ent, only the connection through the .env file.
+
+Adhere to the DRY (Don't Repeat Yourself) principle by eliminating unnecessary duplication of code, logic, or data. Design solutions that are scalable, maintainable, reliable, organized, self-documenting, extensible, and modular. Aim for reusable components and functions, clear and consistent naming conventions, and robust documentation to ensure the codebase remains efficient and adaptable to future changes. Prioritize writing code that is easy to understand, test, and extend, enabling long-term sustainability and collaboration.
+
+
+Always include a header at the top of each file describing its dependencies, purpose, and key functionalities. For files with associated unit tests, ensure the header references the test file(s), and vice versa. This header must be updated regularly to reflect any changes in the file's dependencies, purpose, or usage, ensuring accurate and up-to-date documentation.
+
+Whenever updating a file, check for existing unit tests associated with it. If unit tests exist, ensure their header references the tested file and update them as needed to reflect changes in the tested file. Run the tests to confirm they pass. If no unit tests exist for the file, create appropriate tests with a header referencing the tested file, ensuring the tests accurately validate the file's functionality. Always use parameters and functions from the production-tested code in the test file to maintain consistency and accuracy.
+
+
+Design code to fail fast by immediately raising clear and descriptive errors when unexpected conditions occur, rather than failing silently. Implement verbose debugging with detailed logs, error messages, and stack traces to ensure developers and debuggers can quickly identify and diagnose issues. All errors and debugging information should provide context about the failure, including input parameters, function calls, and relevant system states, enabling immediate visibility into what went wrong and why.
+
+Do not introduce IDs into Python code under any circumstances unless they are absolutely required for interfacing with external systems or frameworks that explicitly demand them. In Python's object-oriented programming, objects themselves must always be passed and utilized directly, leveraging their native methods and attributes. The use of IDs is strictly prohibited as it leads to improper programming practices, undermines object-oriented design, and encourages anti-patterns. If a missing ID is encountered, the solution must focus on proper object handling and relationships, never the introduction of an ID. This prohibition ensures clean, robust, and maintainable code.
